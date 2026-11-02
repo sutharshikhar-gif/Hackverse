@@ -72,18 +72,21 @@
   function fxMessage(text,error){if(fxResult)fxResult.textContent=text;if(fxRate)fxRate.textContent="";if(fxMeta){fxMeta.textContent="";fxMeta.setAttribute("role",error?"alert":"status");}}
   function fxSymbol(code){try{return new Intl.NumberFormat(undefined,{style:"currency",currency:code,currencyDisplay:"narrowSymbol"}).formatToParts(1).find(function(part){return part.type==="currency";}).value;}catch(_){return code;}}
   function fillFxCurrencies(list){[fxFrom,fxTo].forEach(function(select){var selected=select.value;select.textContent="";list.forEach(function(item){fxCurrencyMap[item.code]=item;var option=document.createElement("option");option.value=item.code;option.textContent=item.code+" · "+fxSymbol(item.code)+" · "+item.name;select.appendChild(option);});if(list.some(function(item){return item.code===selected;}))select.value=selected;});}
+  async function fxApiRequest(path,demo){if(!demo)return window.NovaPayApi.request(path);var response=await fetch(path,{headers:{Accept:"application/json"}}),body;try{body=await response.json();}catch(_){body={};}if(!response.ok){var detail=body&&body.error,message=detail&&typeof detail==="object"?detail.message:detail;throw new Error(message||"The currency service could not complete the request.");}return body;}
+  function setFxAmountStep(){if(!fxAmount||!fxFrom)return;var currency=fxCurrencyMap[fxFrom.value],exponent=currency&&Number.isInteger(currency.exponent)?currency.exponent:2;fxAmount.step=exponent===0?"1":"0."+"0".repeat(Math.max(0,exponent-1))+"1";}
   async function updateFxLive(){if(!fxAmount||!fxFrom||!fxTo)return;var auth=window.NovaPayAuth;if(!auth)return;await auth.ready;
-    if(auth.mode==="demo") { var demoRate=fxFrom.value==="INR"&&fxTo.value==="USD"?0.012:fxFrom.value==="USD"&&fxTo.value==="INR"?83.333333:1;var n=Number(fxAmount.value);if(!Number.isFinite(n)||n<=0){fxMessage("Enter a positive amount",true);return;}fxResult.textContent=fxTo.value+" "+(n*demoRate).toFixed(2);fxRate.textContent="Illustrative demo sample · 1 "+fxFrom.value+" = "+demoRate+" "+fxTo.value;fxMeta.textContent="DEMO MODE · sample rate only";return;}
+    var isDemo=auth.mode==="demo",demoRate=null;if(auth.mode==="demo")demoRate=fxFrom.value==="INR"&&fxTo.value==="USD"?0.012:fxFrom.value==="USD"&&fxTo.value==="INR"?83.333333:null;
     fxResult.textContent="Loading rate…";fxRate.textContent="";fxMeta.textContent="";
-    try { if(!Object.keys(fxCurrencyMap).length){fxFrom.textContent="";fxTo.textContent="";var currencyData=await window.NovaPayApi.request("/api/fx/currencies");fillFxCurrencies(currencyData.currencies||[]);}
+    try { var apiPrefix=isDemo?"/api/fx/public":"/api/fx";if(!Object.keys(fxCurrencyMap).length){var currencyData=isDemo?await fxApiRequest(apiPrefix+"/currencies",true):await window.NovaPayApi.request("/api/fx/currencies");fillFxCurrencies(currencyData.currencies||[]);setFxAmountStep();}
       var amount=String(fxAmount.value||"").trim();if(!/^\d+(?:\.\d+)?$/.test(amount)||Number(amount)<=0)throw new Error("Enter a positive amount.");
-      var query=new URLSearchParams({amount:amount,base:fxFrom.value,quote:fxTo.value});var result=await window.NovaPayApi.request("/api/fx/convert?"+query.toString());
+      setFxAmountStep();var query=new URLSearchParams({amount:amount,base:fxFrom.value,quote:fxTo.value});var result=isDemo?await fxApiRequest(apiPrefix+"/convert?"+query.toString(),true):await window.NovaPayApi.request("/api/fx/convert?"+query.toString());
       fxResult.textContent=result.convertedAmount;fxRate.textContent="1 "+result.baseCurrency+" = "+result.rate+" "+result.quoteCurrency;
-      fxMeta.textContent=result.source+" · "+new Date(result.timestamp).toLocaleString()+" · "+result.label+". Providers update about once per working day.";
-    } catch(error){fxMessage(error.message||"Exchange rate unavailable. Try again later.",true);}
+      fxMeta.textContent=(isDemo?"DEMO MODE · ":"")+result.source+" · "+new Date(result.timestamp).toLocaleString()+" · "+result.label+". Rates update about once per day.";
+    } catch(error){if(isDemo&&demoRate){var n=Number(fxAmount.value);if(Number.isFinite(n)&&n>0){fxResult.textContent=fxTo.value+" "+(n*demoRate).toFixed(2);fxRate.textContent="Illustrative fallback · 1 "+fxFrom.value+" = "+demoRate+" "+fxTo.value;fxMeta.textContent="DEMO MODE · sample rate only (live service unavailable)";return;}}fxMessage(error.message||"Exchange rate unavailable. Try again later.",true);}
   }
   function scheduleFx(){clearTimeout(fxTimer);fxTimer=setTimeout(updateFxLive,300);}
   [fxAmount,fxFrom,fxTo].forEach(function(control){if(control)control.addEventListener("input",scheduleFx);if(control&&control.tagName==="SELECT")control.addEventListener("change",scheduleFx);});
+  if(fxFrom)fxFrom.addEventListener("change",setFxAmountStep);
   if(fxSwap)fxSwap.addEventListener("click",function(){var old=fxFrom.value;fxFrom.value=fxTo.value;fxTo.value=old;scheduleFx();});
   if(fxAmount)updateFxLive();
 })();
