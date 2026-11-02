@@ -100,7 +100,7 @@ export function createApp({ config = defaultConfig, repos, paypal, askAI, transc
   app.use('/api', aiRoutes({ config, askAI, identity, transcribeAudio }));
   app.use('/api', approvalRoutes({ config, repos, identity, paypal }));
   app.use('/api', financialRoutes({ repos }));
-  app.use('/api', fxRoutes({ fx }));
+  app.use('/api', fxRoutes({ fx, currencyConverterUrl: config.CURRENCY_CONVERTER_URL }));
   app.use('/api', reportRoutes({ repos }));
   app.use('/api', invoiceRoutes({ repos }));
   app.use('/api', notificationRoutes({ repos, runAnomalyScan }));
