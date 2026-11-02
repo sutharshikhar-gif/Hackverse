@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NovaPay — Dashboard</title>
+<meta name="description" content="NovaPay dashboard for PayPal merchants.">
+<meta name="color-scheme" content="light dark">
+<script>(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem("novapay-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";d.setAttribute("data-theme",t);})();</script>
+<script>try{var _s=JSON.parse(localStorage.getItem("novapay-settings")||"{}")||{},_r=document.documentElement;if(_s.reduceMotion)_r.classList.add("reduce-motion");if(_s.compact)_r.classList.add("density-compact")}catch(e){}</script>
+<script>try{if(sessionStorage.getItem("novapay-hero-enter")==="1"){sessionStorage.removeItem("novapay-hero-enter");document.documentElement.classList.add("fx-enter");setTimeout(function(){document.documentElement.classList.remove("fx-enter")},1100)}}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="src/fonts.css">
+<link rel="stylesheet" href="src/tokens.css">
+<link rel="stylesheet" href="src/base.css">
+<link rel="stylesheet" href="src/dashboard.css?v=4">
+<link rel="stylesheet" href="src/novapay-live.css">
+<link rel="stylesheet" href="src/click-spark.css">
+<link rel="stylesheet" href="src/specular-buttons.css">
+<link rel="stylesheet" href="src/line-sidebar.css">
+<link rel="stylesheet" href="src/magic-bento-dashboard.css">
+<link rel="stylesheet" href="src/novapay-pastel.css">
+<link rel="stylesheet" href="src/novapay-dark-glow.css">
+<link rel="stylesheet" href="src/transaction-glass.css">
+<link rel="stylesheet" href="src/transaction-motion.css">
+<link rel="stylesheet" href="src/transaction-premium.css?v=8">
+<link rel="stylesheet" href="src/transactions-grid.css?v=2">
+<link rel="stylesheet" href="src/tx-icons.css?v=3">
+<link rel="stylesheet" href="src/modules-premium.css">
+<link rel="stylesheet" href="src/modules-reactbits.css">
+<link rel="stylesheet" href="src/animated-list.css">
+<link rel="stylesheet" href="src/approvals-polish.css">
+<link rel="stylesheet" href="src/modules.css?v=2">
+<link rel="stylesheet" href="src/capabilities-holo.css?v=2">
+<link rel="stylesheet" href="src/hero-scene.css">
+<link rel="stylesheet" href="src/nav-colorful.css">
+<link rel="stylesheet" href="src/dashboard-enter.css">
+<link rel="stylesheet" href="src/payment-theme.css">
+<link rel="stylesheet" href="src/module-icons.css">
+<link rel="stylesheet" href="src/text-type.css">
+<script src="src/novapay-logo.js"></script>
+<link rel="stylesheet" href="src/modal-close-corner.css">
+<link rel="stylesheet" href="src/fx-swap-logo.css">
+<link rel="stylesheet" href="src/settings.css?v=4">
+<link rel="stylesheet" href="src/help-support.css">
+<link rel="stylesheet" href="src/topbar-fx.css?v=2">
+<link rel="stylesheet" href="src/date-picker.css">
+</head>
+<body class="dashboard-body">
+<div class="novapay-scene novapay-scene--dashboard" data-novapay-scene aria-hidden="true"><span class="scene-orb scene-orb--a"></span><span class="scene-orb scene-orb--b"></span><span class="scene-cube scene-cube--a"></span></div><button class="mobile-menu-toggle" id="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button><div class="mobile-nav-backdrop" id="mobile-nav-backdrop" hidden></div><button class="mobile-ai-fab" id="mobile-ai-fab" type="button" aria-label="Open NovaPay AI"><novapay-logo size="18" variant="mark"></novapay-logo></button>
+<div class="dashboard-shell">
+    <button class="sidebar-reopen" id="sidebar-reopen" type="button" aria-label="Open navigation" aria-expanded="false" hidden><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+<aside class="dashboard-sidebar" aria-label="Dashboard navigation">
+    <button class="sidebar-collapse" id="sidebar-collapse" type="button" aria-label="Close navigation" aria-expanded="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <a class="dashboard-brand" href="preview.html#home" aria-label="Return to NovaPay home"><img src="assets/novapay-logo.png" alt="NovaPay — Smarter Payments. Powered by AI." class="dashboard-logo-full" style="width:130px;height:auto;display:block;"><img src="assets/novapay-mark-clean.png" alt="" class="dashboard-logo-mark" aria-hidden="true"></a>
+    <button type="button" class="user-chip sidebar-user" id="sidebar-user" aria-haspopup="dialog" aria-label="View profile details">
+      <span class="avatar" id="user-avatar">S</span>
+      <span><b id="user-name">Shikhar</b><small id="user-email">Loading account…</small></span>
+    </button>
+    <nav class="dashboard-nav" id="dashboard-nav">
+      <a href="#dashboard" data-view="dashboard" aria-label="Dashboard" aria-current="page"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/dashboard.png" alt="" width="38" height="38"></span><b>Dashboard</b></a>
+      <a href="#transactions" data-view="transactions" aria-label="Transactions"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/transactions.png" alt="" width="38" height="38"></span><b>Transactions</b></a>
+      <a href="#ai-assistant" data-view="ai-assistant" aria-label="AI Assistant"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/ai-assistant.png" alt="" width="38" height="38"></span><b>AI Assistant</b></a>
+      <a href="#approvals" data-view="approvals" aria-label="Approvals"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/approvals.png" alt="" width="38" height="38"></span><b>Approvals</b><em id="nav-approvals-count" hidden>0</em></a>
+      <a href="#sandbox" data-view="sandbox" aria-label="PayPal Sandbox"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/paypal.png" alt="" width="38" height="38"></span><b>PayPal Sandbox</b></a>
+      <a href="#ledger" data-view="ledger" aria-label="Ledger"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/ledger.png" alt="" width="38" height="38"></span><b>Ledger</b></a>
+      <a href="#invoices" data-view="invoices" aria-label="Invoices"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/invoices.png" alt="" width="38" height="38"></span><b>Invoices</b></a>
+      <a href="#reports" data-view="reports" aria-label="Reports"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/reports.png" alt="" width="38" height="38"></span><b>Reports</b></a>
+      <a href="#documents" data-view="documents" aria-label="Documents"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/documents.png" alt="" width="38" height="38"></span><b>Documents</b></a>
+      <a href="#community-funds" data-view="community-funds" aria-label="Community Funds"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/fundraising.png" alt="" width="38" height="38"></span><b>Community Funds</b></a>
+      <a href="#maintenance" data-view="maintenance" aria-label="Maintenance"><span class="nav-ai-logo nav-np-tile"><img class="nav-mod-logo nav-mod-logo--np" src="assets/icons/maintenance.png" alt="" width="38" height="38"></span><b>Maintenance</b></a>
+    </nav>
+    <a class="back-home" href="preview.html#home">← Back to Home</a>
+  </aside>
+
+  <main class="dashboard-main">
+    <section class="empty-state" id="workspace-required" role="alert" hidden>
+      <h2>Create your workspace</h2>
+      <p>Your email is verified, but no organization workspace is available yet.</p>
+      <button class="btn btn--primary" id="workspace-create" type="button">Create your workspace</button>
+    </section>
+    <header class="dashboard-topbar">
+      <div class="dashboard-heading">
+        <span class="top-kicker">NOVAPAY</span>
+        <h1 id="page-title">Dashboard</h1>
+        <span class="top-subkicker" id="ai-top-kicker" hidden>NOVAPAY AI · MERCHANT ASSISTANT</span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button calendar-button" id="calendar-button" type="button" aria-label="Open calendar" aria-expanded="false" aria-haspopup="dialog"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect class="cal-body" x="3.5" y="5" width="17" height="15.5" rx="3"/><path class="cal-pin cal-pin-l" d="M8 3v4"/><path class="cal-pin cal-pin-r" d="M16 3v4"/><path class="cal-bar" d="M3.5 10h17"/><g class="cal-dots" stroke="none" fill="currentColor"><circle style="--i:0" cx="8" cy="13.6" r="1.1"/><circle style="--i:1" cx="12" cy="13.6" r="1.1"/><circle style="--i:2" cx="16" cy="13.6" r="1.1"/><circle style="--i:3" cx="8" cy="17" r="1.1"/><circle class="cal-today" style="--i:4" cx="12" cy="17" r="1.1"/><circle style="--i:5" cx="16" cy="17" r="1.1"/></g></svg></button>
+        <button class="icon-button notification-button" id="notifications" type="button" aria-label="View notifications" aria-expanded="false"><span class="fx-glyph fx-coin" aria-hidden="true" style="font-weight:700">$</span><span class="notification-dot" aria-hidden="true"></span></button>
+        <button class="theme-toggle" id="dashboard-theme" type="button" aria-label="Switch theme" aria-pressed="false"><span class="fx-glyph fx-sun">☼</span></button>
+        <button class="icon-button more-button" id="more-button" type="button" aria-label="More options" aria-expanded="false" aria-haspopup="menu"><svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
+      </div>
+      <div class="popover notification-popover" id="notification-popover" hidden>
+        <div class="popover-title"><b>Notifications</b><span class="status info" id="notif-count">Loading…</span></div>
+        <div id="notification-items" aria-live="polite"><p class="module-foot" id="notif-status">Loading organization notifications…</p></div>
+        <p class="notif-empty" id="notif-empty" hidden>No notifications for this organization.</p>
+      </div>
+      <div class="popover calendar-popover" id="calendar-popover" role="dialog" aria-label="Calendar" hidden>
+        <div class="cal-head"><button type="button" class="cal-nav" id="cal-prev" aria-label="Previous month">‹</button><b id="cal-title"></b><button type="button" class="cal-nav" id="cal-next" aria-label="Next month">›</button></div>
+        <div class="cal-grid cal-dow" aria-hidden="true"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+        <div class="cal-grid" id="cal-days"></div>
+      </div>
+      <div class="popover more-popover" id="more-popover" role="menu" hidden>
+        <button type="button" class="popover-link" role="menuitem" data-profile-action="settings"><span class="menu-lead"><span class="menu-ico menu-ico--settings"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.8l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.8v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Settings</span><span class="menu-arrow">→</span></button>
+        <button type="button" class="popover-link" role="menuitem" id="logout"><span class="menu-lead"><span class="menu-ico menu-ico--logout"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></span>Log out</span><span class="menu-arrow">→</span></button>
+      </div>
+    </header>
+
+    <section class="dashboard-content">
+      <div class="view" id="view-dashboard" data-view-panel>
+        <div class="dashboard-hero-card">
+          <div class="dashboard-hero-copy">
+            <span class="eyebrow"><novapay-logo size="14" variant="mark"></novapay-logo> Workspace overview</span>
+            <h2>Your PayPal transactions, now working for you.</h2>
+            <p>NovaPay organizes illustrative PayPal activity into books, highlights what matters, and helps you review next steps.</p>
+            <div class="hero-pills"><span><img class="np-tile-logo" src="assets/novapay-mark-clean.png" alt="" width="16" style="width:16px;height:auto;display:block;object-fit:contain"> Auto Bookkeeping</span><span><novapay-logo size="13" variant="mark"></novapay-logo> AI Insights</span><span><img class="np-tile-logo" src="assets/novapay-mark-clean.png" alt="" width="16" style="width:16px;height:auto;display:block;object-fit:contain"> Safe Actions</span></div>
+          </div>
+          <div class="dashboard-hero-art" data-integration-visual role="img" aria-label="Illustrative PayPal sandbox payment flow, not live organization data">
+            <div class="hs-scene" aria-hidden="true">
+              <span class="hs-glow"></span>
+              <svg class="hs-orbit" viewBox="0 0 520 290" preserveAspectRatio="none">
+                <g transform="rotate(-7 260 150)">
+                  <ellipse class="hs-orbit-ring" cx="260" cy="150" rx="248" ry="104" pathLength="1000"/>
+                  <ellipse class="hs-orbit-comet" cx="260" cy="150" rx="248" ry="104" pathLength="1000"/>
+                  <ellipse class="hs-orbit-comet is-2" cx="260" cy="150" rx="248" ry="104" pathLength="1000"/>
+                </g>
+              </svg>
+
+              <div class="hs-layer hs-laptop"><div class="hs-float"><div class="hs-face">
+                <div class="hs-bezel"></div>
+                <div class="hs-screen">
+                  <div class="hs-screen-head"><svg class="hs-pp" viewBox="0 0 42 48"><g transform="skewX(-6) translate(3 0)"><path d="M8 4H22C30 4 35 9 33.5 17C32.2 24 27 28 20 28H15L12.5 44H3ZM16 11L14.5 21H19C23 21 25.5 19 26 15.5C26.5 12.5 24.5 11 21 11Z" transform="translate(4 3)" fill="#2c8cf4" fill-rule="evenodd"/><path d="M8 4H22C30 4 35 9 33.5 17C32.2 24 27 28 20 28H15L12.5 44H3ZM16 11L14.5 21H19C23 21 25.5 19 26 15.5C26.5 12.5 24.5 11 21 11Z" class="hs-p-front" fill-rule="evenodd"/></g></svg><div class="hs-skel"><i></i><i></i></div></div>
+                  <div class="hs-rows">
+                    <div class="hs-row is-pay is-out"><span class="hs-ico"><i></i></span><span>Payment</span><b>Example</b></div>
+                    <div class="hs-row is-out"><span class="hs-ico"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 9h6M9 13h6"/></svg></span><span>Fee</span><b>Example</b></div>
+                    <div class="hs-row is-out"><span class="hs-ico"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/></svg></span><span>Refund</span><b>Example</b></div>
+                    <div class="hs-row is-in"><span class="hs-ico"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><span>Payout</span><b>Example</b></div>
+                  </div>
+                </div>
+                <div class="hs-base"></div>
+              </div></div></div>
+
+              <div class="hs-layer hs-paypal"><div class="hs-float"><div class="hs-face">
+                <svg class="hs-pp-big" viewBox="0 0 42 48"><g transform="skewX(-6) translate(3 0)"><path d="M8 4H22C30 4 35 9 33.5 17C32.2 24 27 28 20 28H15L12.5 44H3ZM16 11L14.5 21H19C23 21 25.5 19 26 15.5C26.5 12.5 24.5 11 21 11Z" transform="translate(4 3)" fill="#2c8cf4" fill-rule="evenodd"/><path d="M8 4H22C30 4 35 9 33.5 17C32.2 24 27 28 20 28H15L12.5 44H3ZM16 11L14.5 21H19C23 21 25.5 19 26 15.5C26.5 12.5 24.5 11 21 11Z" class="hs-p-front" fill-rule="evenodd"/></g></svg>
+                <span class="hs-pp-name">PayPal</span>
+                <div class="hs-recv"><small>Payment Received</small><strong>Sandbox example</strong>
+                  <span class="hs-check"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div></div></div>
+
+              <div class="hs-layer hs-ai"><div class="hs-float"><div class="hs-face">
+                <svg class="hs-spark" viewBox="0 0 40 40"><defs><linearGradient id="hs-spark-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b7a6ff"/><stop offset="1" stop-color="#6a5cff"/></linearGradient></defs><path d="M20 3c1.2 7.6 3.4 11.2 7 12.8 4.2 1.9 7 2.4 10 3.2-3 .8-5.8 1.3-10 3.2-3.6 1.6-5.8 5.2-7 12.8-1.2-7.6-3.4-11.2-7-12.8C9 21.3 6.200 20.800 3 20c3.200-.8 6-1.300 10-3.200C16.600 15.200 18.800 10.600 20 3z" fill="url(#hs-spark-g)"/></svg>
+                <div class="hs-ai-text"><b>AI</b><span>Analyzing<span class="hs-dots"><i>.</i><i>.</i><i>.</i></span></span></div>
+                <div class="hs-prog"><i></i></div>
+              </div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-kpis dashboard-kpi-row">
+          <article class="kpi-card kpi-revenue" tabindex="0"><div class="kpi-top"><span class="kpi-icon" aria-hidden="true"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M3 20h4v-5H3zM10 20h4V11h-4zM17 20h4V6h-4z"/><path d="M3 11l5-4 4 3 7-6"/><path d="M15 4h4v4"/></svg></span><span>Revenue</span></div><strong id="kpi-revenue">—</strong><small id="kpi-revenue-trend"></small><svg class="spark" id="spark-revenue" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></article>
+          <article class="kpi-card kpi-fees" tabindex="0"><div class="kpi-top"><span class="kpi-icon" aria-hidden="true"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><circle class="f" cx="12" cy="12" r="9"/><path d="M15.5 8.5l-7 7"/><circle cx="9" cy="9" r="1.2"/><circle cx="15" cy="15" r="1.2"/></svg></span><span>PayPal Fees</span></div><strong id="kpi-fees">—</strong><small id="kpi-fees-trend"></small><svg class="spark" id="spark-fees" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></article>
+          <article class="kpi-card kpi-refunds" tabindex="0"><div class="kpi-top"><span class="kpi-icon" aria-hidden="true"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4L4 9l5 5"/><path d="M4 9h10a6 6 0 010 12h-4"/><circle class="f" cx="14" cy="15" r="2.2"/></svg></span><span>Refunds</span></div><strong id="kpi-refunds">—</strong><small id="kpi-refunds-trend"></small><svg class="spark" id="spark-refunds" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></article>
+          <article class="kpi-card kpi-disputes" tabindex="0"><div class="kpi-top"><span class="kpi-icon" aria-hidden="true"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M12 8v5"/><path d="M12 16.4v.1"/></svg></span><span>Disputes</span></div><strong id="kpi-disputes">—</strong><small id="kpi-disputes-trend"></small><svg class="spark" id="spark-disputes" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></article>
+          <article class="kpi-card kpi-net" tabindex="0"><div class="kpi-top"><span class="kpi-icon" aria-hidden="true"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M3 8a3 3 0 013-3h11v3"/><rect class="f" x="3" y="8" width="18" height="12" rx="3"/><path d="M16 14h5"/><path d="M16.5 14v.1"/></svg></span><span>Net Income</span></div><strong id="kpi-net">—</strong><small id="kpi-net-trend"></small><svg class="spark" id="spark-net" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"></svg></article>
+        </div>
+
+        <div class="dash-grid dashboard-main-grid">
+          <article class="dash-card cashflow-card">
+            <div class="card-heading cashflow-heading"><div><h3 class="heading-with-icon"><span class="section-icon-tile"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h14"/><path d="M14.5 4.5L18 8l-3.5 3.5"/><path d="M20 16H6"/><path d="M9.5 12.5L6 16l3.5 3.5"/><circle class="f" cx="12" cy="12" r="1.6"/></svg></span>Cash Flow Overview</h3><p id="cf-sub">Loading organization ledger data…</p></div><div class="cashflow-legend"><span class="legend-net">● Net cash movement</span></div></div>
+            <div class="range-tabs" id="cashflow-tabs" role="tablist" aria-label="Cash flow period"><button type="button" class="active" data-range="month">This month</button><button type="button" data-range="last-month">Last month</button><button type="button" data-range="year">This year</button></div>
+            <div id="dashboard-live-status" class="module-foot" role="status" hidden></div><div class="cashflow-summary"><div><span>Money In</span><strong id="cash-in">—</strong></div><div><span>Money Out</span><strong id="cash-out">—</strong></div><div><span>Net cash movement</span><strong id="cash-net">—</strong></div></div>
+            <div class="cashflow-chart" id="cashflow-chart"><div class="cf-y" id="cf-y" aria-hidden="true"></div><div class="cf-plot" id="cf-plot" role="img" aria-label="Organization net cash movement by month"><svg id="cf-svg" viewBox="0 0 900 260" preserveAspectRatio="none"><defs><linearGradient id="inFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#18b68a" stop-opacity=".30"/><stop offset="100%" stop-color="#18b68a" stop-opacity="0"/></linearGradient><linearGradient id="netFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4e76e9" stop-opacity=".30"/><stop offset="100%" stop-color="#4e76e9" stop-opacity="0"/></linearGradient></defs><g class="chart-grid" id="cf-grid"></g><path id="cash-in-area" class="cash-area in-area"></path><path id="cash-net-area" class="cash-area net-area"></path><path id="cash-in-line" class="cash-line in-line"></path><path id="cash-out-line" class="cash-line out-line"></path><path id="cash-net-line" class="cash-line net-line"></path></svg><div class="cf-cursor" id="cf-cursor" hidden></div><div class="cf-crosshair-y" id="cf-crosshair-y" hidden></div><div class="cf-tip" id="cf-tip" hidden></div><div class="chart-labels" id="cf-x"></div></div></div>
+          </article>
+          <article class="dash-card financial-health-card"><div class="card-heading"><h3 class="heading-with-icon"><span class="section-icon-tile health"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M12 20.5s-8-4.6-8-10.7A4.6 4.6 0 0112 7a4.6 4.6 0 018 2.8c0 6.1-8 10.7-8 10.7z"/><path d="M6.5 12.5h3l1.5-3 2.2 6 1.5-3h2.8"/></svg></span>Organization Data</h3><span>→</span></div><div class="health-ring" aria-label="Organization data status"><svg class="health-donut" viewBox="0 0 120 120" aria-hidden="true"><circle class="health-track" cx="60" cy="60" r="48"></circle><circle class="health-segment health-segment-main" cx="60" cy="60" r="48" pathLength="100"></circle></svg><strong data-health-value>—</strong><small>Ledger<br><b>status</b></small></div><ul class="check-list"><li class="ok">Organization-scoped reports</li><li class="ok">Sandbox activity only</li><li class="warn"><a href="#approvals">Open Approvals <span aria-hidden="true">→</span></a></li><li class="ok">Live data status</li></ul><div class="health-callout"><span class="callout-icon"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16v4M17 18h4"/></svg></span> Organization report status<small>Loaded from organization-scoped API</small></div></article>
+        </div>
+
+        <div class="dash-lower dash-lower--transactions-only">
+        <article class="dash-card recent-card"><div class="card-heading"><div><h3 class="heading-with-icon"><span class="section-icon-tile"><svg class="section-icon np-sec-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="f" d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span>Recent Transactions</h3><p>Latest organization transactions</p></div><a href="#transactions">View all →</a></div><div class="table-scroll"><table><thead><tr><th>Type</th><th>Amount</th><th>Fee</th><th>Net</th><th>Status</th><th>Time</th></tr></thead><tbody><tr><td colspan="6">Loading organization transactions…</td></tr></tbody></table></div></article>
+        </div>
+      </div>
+
+      <div class="view" id="view-transactions" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/transactions.png" alt="" width="64" height="64"><h2>Transaction activity</h2><p>Review saved transactions from this organization. Sandbox records are only payments captured in this workspace; this is not a PayPal history import.</p></div>
+        <article class="dash-card"><div class="tx-source-note" id="tx-source-note" role="status">Transactions load from this organization after sign-in.</div><div class="filter-row tx-filters"><input id="tx-search" placeholder="Search ID, buyer, type, or status" aria-label="Search transaction ID, buyer, type, or status"><label>From <input id="tx-from" type="date" aria-label="Start date" data-datepicker data-dp-max-input="tx-to"></label><label>To <input id="tx-to" type="date" aria-label="End date" data-datepicker data-dp-min-input="tx-from"></label><select id="tx-type" aria-label="Filter transaction type"><option value="">All types</option><option>Payment</option><option>Refund</option><option>Dispute</option><option>Payout</option></select><select id="tx-status" aria-label="Filter transaction status"><option value="">All statuses</option><option>Completed</option><option>Refunded</option><option>Under Review</option><option>Possible duplicate</option><option>Pending</option></select><label>Min <input id="tx-min" type="number" min="0" step="0.01" placeholder="Any" aria-label="Minimum amount"></label><label>Max <input id="tx-max" type="number" min="0" step="0.01" placeholder="Any" aria-label="Maximum amount"></label><button type="button" class="btn btn--ghost" id="tx-reset">Reset filters</button><div id="tx-grid-toolbar" class="tx-grid-toolbar"><div class="tx-grid-columns"><button type="button" class="btn btn--ghost" id="tx-columns-toggle" aria-expanded="false" aria-controls="tx-columns-menu">Columns</button><div id="tx-columns-menu" class="tx-grid-columns-menu" role="group" aria-label="Show or hide transaction columns" hidden></div></div></div></div><div class="tx-grid-error status warn" id="tx-grid-error" role="status" hidden></div><p class="tx-result-count" id="tx-result-count" aria-live="polite"></p><div id="transactions-grid" class="transactions-grid" role="region" aria-label="Transaction records" hidden></div><div id="transactions-table-source" class="table-scroll" aria-hidden="false"><table class="data-table"><thead><tr><th>Date &amp; time</th><th>Type</th><th>Buyer / counterparty</th><th>Gross amount</th><th>PayPal fee</th><th>Net amount</th><th>Status</th><th>PayPal transaction / capture ID</th></tr></thead><tbody id="transactions-table-body"></tbody></table></div><div class="empty-state" id="tx-empty" hidden><span class="empty-icon" aria-hidden="true"><svg class="section-icon"><use href="src/icons.svg#i-search"></use></svg></span><h3>No transactions yet</h3><p>Create a sandbox payment to get started, or adjust the current filters.</p></div><div class="tx-grid-footer" id="tx-grid-footer"><button type="button" class="btn btn--ghost" id="tx-export-grid-csv">Export CSV</button></div></article>
+      </div>
+
+      <div class="view" id="view-ai-assistant" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/ai-assistant.png" alt="" width="64" height="64"><h2 data-text-type data-text-type-options='{"typingSpeed":75,"deletingSpeed":50,"typeEffect":"fade","mistakes":0.2,"cursorStyle":"bar","cursorGlide":true,"showCursor":true,"loop":false,"startOnVisible":true,"hideCursorOnComplete":true}'>Understand the activity you can see</h2><p>Ask about available transaction records and review the evidence behind each answer. NovaPay does not import your full PayPal history.</p></div>
+        <div class="ai-command-grid">
+          <article class="ai-workspace dash-card ai-command-card">
+            <div class="ai-panel-head"><div><span class="ai-spark"><img class="np-ai-robot" src="assets/ai-assistant-robot.png" alt="" width="20" height="20" style="width:20px;height:20px;display:block;object-fit:contain"></span><div><b>NovaPay AI</b><small>Answers use only activity shown in this workspace</small></div></div><span class="ai-head-right"><button type="button" class="btn btn--ghost" id="ai-new-chat">New chat</button><button type="button" class="btn btn--ghost" id="ai-test-voice">Test voice</button><span id="ai-speech-status" class="module-foot" role="status" aria-live="polite">Ready</span><button type="button" class="btn btn--ghost" id="ai-voice-repeat">Replay introduction</button><button type="button" class="btn btn--ghost" id="ai-voice-mute" aria-pressed="false">Mute voice</button><button type="button" class="ai-fs-btn" id="ai-fullscreen" aria-pressed="false" aria-label="Enter full screen" title="Full screen"><svg class="ai-fs-expand" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="ai-fs-collapse" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button></span></div>
+            <div class="ai-data-status" id="ai-data-status" role="status">Checking assistant mode…</div>
+            <div class="ai-conversation" id="ai-conversation" role="log" aria-label="Assistant conversation" aria-live="polite" aria-relevant="additions text">
+              <div class="ai-bubble ai-bubble--assistant"><span class="ai-avatar"><img class="np-ai-robot" src="assets/ai-assistant-robot.png" alt="" width="22" height="22" style="width:22px;height:22px;display:block;object-fit:contain"></span><div><b>NovaPay</b><p data-text-type data-text-type-options='{"typingSpeed":28,"deletingSpeed":50,"typeEffect":"fade","mistakes":0.2,"cursorStyle":"bar","cursorGlide":true,"showCursor":true,"loop":false,"startOnVisible":true,"hideCursorOnComplete":true}'>Ask about your organization. Answers cite available records; when evidence is missing, NovaPay will say so.</p></div></div>
+            </div>
+            <div class="suggestions ai-quick-actions" aria-label="Quick actions">
+              <button type="button" data-ai-query="Summarize my recent payments.">Summarize my recent payments</button>
+              <button type="button" data-ai-query="What PayPal fees are shown?">What PayPal fees are shown?</button>
+              <button type="button" data-ai-query="Are there unusual refunds?">Are there unusual refunds?</button>
+              <button type="button" data-ai-query="Explain this transaction.">Explain this transaction</button>
+              <button type="button" data-ai-query="What needs my attention?">What needs my attention?</button>
+            </div>
+            <div class="ai-proposal-slot" id="ai-proposal-slot" aria-live="polite"></div>
+            <div class="ai-voice-visualizer" id="ai-voice-visualizer" hidden role="status" aria-label="Microphone frequency visualizer"><span class="ai-voice-bars" aria-hidden="true"></span><span id="ai-voice-label">Listening…</span><button type="button" id="ai-mic-stop">Stop</button></div>
+            <div class="chat-row ai-chat-row"><div class="ai-dictation" id="ai-dictation" hidden aria-hidden="true"></div><input id="ai-input" placeholder="Ask about your organization…" aria-label="Ask about your organization"><button class="ai-tool-button" id="ai-upload" type="button" aria-label="Open Documents to review a file" title="Open Documents"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.4 11.1-8.5 8.5a6 6 0 0 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7L10 16.9a2 2 0 0 1-2.8-2.8l8.5-8.5"/></svg></button><button class="ai-tool-button" id="ai-mic" type="button" aria-label="Turn voice assistant on" aria-pressed="false" title="Voice off"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></button><button class="btn btn--primary" id="ai-send" type="button">Send</button></div>
+            <p class="module-foot" id="ai-voice-note">Tap the mic and tell me what you need. Hold it only if browser speech recognition is unavailable.</p>
+            <p class="ai-live-status" id="ai-live-status" role="status" aria-live="polite"></p>
+          </article>
+        </div>
+      </div>
+
+      <div class="view" id="view-approvals" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/approvals.png" alt="" width="64" height="64"><h2>Approval queue</h2><p>Review each proposal and its evidence. A PayPal Sandbox action requires a second confirmation with the exact capture and amount. Unsupported actions are simulated only.</p></div>
+        <article class="dash-card approval-filters"><label>Status<select id="approval-status-filter"><option value="">All statuses</option><option>Pending</option><option>Pending Verification</option><option>Processing</option><option>Approved</option><option>Rejected</option><option>Failed</option><option>Completed</option></select></label><label>Action type<select id="approval-type-filter"><option value="">All action types</option><option value="refund">Refund</option><option value="dispute-evidence">Dispute evidence</option><option value="hold-payout">Payout hold</option><option value="review-finding">Informational finding</option><option value="send-invoice">Invoice send</option><option value="maintenance-payment">Maintenance payment</option></select></label><label>Source<select id="approval-source-filter"><option value="">All sources</option><option>NovaPay AI</option></select></label><span id="approval-result-count" aria-live="polite"></span></article>
+        <p id="approval-live-status" class="module-foot" role="status" aria-live="polite">Loading approvals…</p><button id="approval-live-retry" class="btn btn--ghost" type="button" hidden>Retry</button><div class="approval-grid" id="approval-queue"></div>
+        <article class="dash-card" style="margin-top:16px"><div class="card-heading"><h3>Recent actions (this session)</h3><span>Session only · cleared when this page is reloaded</span></div><ul class="approval-audit" id="audit-log" aria-live="polite"><li class="np-empty">No decisions yet.</li></ul></article>
+      </div>
+
+      <div class="view" id="view-sandbox" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/paypal.png" alt="" width="64" height="64"><h2>PayPal Sandbox</h2><p>Demonstrate the order, buyer approval, and capture flow. PayPal Sandbox — test transactions only. NovaPay does not import your full PayPal history.</p></div>
+        <div class="np-status-grid">
+          <article class="dash-card"><span class="status info" id="st-paypal">Checking…</span><h3>PayPal Sandbox connection</h3><p id="paypal-status-help">Checking backend and sandbox configuration…</p><small id="st-backend" class="status info">Backend status checking…</small></article>
+          <article class="dash-card"><span class="status info" id="st-ai">Checking…</span><h3>AI service</h3><p id="st-ai-model">Claude via Anthropic API (suggestions only)</p></article>
+          <article class="dash-card"><span class="status info" id="st-webhook">Checking…</span><h3>Webhook verification</h3><p id="st-webhook-help">Webhook events are shown as untrusted until verified.</p></article>
+        </div>
+        <article class="dash-card" style="margin-top:16px"><div class="card-heading"><h3>Create a sandbox payment</h3><span>Orders API</span></div>
+          <p>Step 1: enter an amount in USD (0.01–10,000.00) and create a test order. Step 2: approve it as the sandbox buyer in PayPal. Step 3: return here and capture the approved order.</p>
+          <div class="chat-row"><label for="sb-amount">Amount (USD)</label><input id="sb-amount" type="number" value="10.00" min="0.01" max="10000" step="0.01" inputmode="decimal"><span>Currency: USD</span><button class="btn btn--primary" id="sb-create" type="button">Create test order</button></div>
+          <p id="sb-status" role="status" aria-live="polite">Sandbox orders are unavailable until the backend and PayPal Sandbox credentials are ready.</p><div id="sb-result" class="np-result" hidden></div></article>
+        <div class="np-status-grid" style="margin-top:16px">
+          <article class="dash-card"><div class="card-heading"><h3>Webhook events</h3><span>/api/webhook</span></div><p>Configure this endpoint in your PayPal Sandbox app’s Webhooks. For local testing, expose the server with a trusted tunnel and use its HTTPS URL ending in <code>/api/webhook</code>. Set <code>PAYPAL_WEBHOOK_ID</code> to the webhook ID from PayPal to enable signature verification.</p><ul class="np-log" id="webhook-log" aria-live="polite"><li class="np-empty">No events received. Webhook events are session-only and are not used as transaction records.</li></ul></article>
+          <article class="dash-card"><div class="card-heading"><h3>API activity</h3><span>Session-only server log</span></div><p>Recent PayPal and AI requests. These entries are held in memory and clear when the server restarts.</p><ul class="np-log" id="api-log" aria-live="polite"><li class="np-empty">No calls yet.</li></ul></article>
+        </div>
+      </div>
+      <div class="view" id="view-ledger" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/ledger.png" alt="" width="64" height="64"><h2>Ledger</h2><p>A clear, double-entry view of saved organization activity. Entries are read from the organization ledger.</p></div>
+        <div id="ledger-live-error" class="tx-grid-error status warn" role="status" hidden></div>
+        <div class="module-kpis"><article class="dash-card"><small>Period debits</small><strong data-ledger-kpi="debits">—</strong><span class="status info" data-ledger-label="debits">Loading saved entries</span></article><article class="dash-card"><small>Period credits</small><strong data-ledger-kpi="credits">—</strong><span class="status info" data-ledger-label="credits">Loading saved entries</span></article><article class="dash-card"><small>Unreconciled</small><strong data-ledger-kpi="unreconciled">—</strong><span class="status info" data-ledger-label="unreconciled">Loading saved entries</span></article></div>
+        <article class="dash-card module-card"><div class="card-heading"><div><h3>Journal entries</h3><p>Saved entries are organization-scoped; totals stay separated by currency.</p></div><div class="ledger-period-control"><span>Period</span><select id="ledger-period" aria-label="Ledger period"><option>Last 30 days</option><option>This quarter</option><option>This year</option></select></div></div><div id="ledger-live-status" class="module-foot" role="status">Loading organization-scoped journal entries…</div><div class="module-table-wrap"><table class="module-table"><thead><tr><th>Date</th><th>Reference</th><th>Account</th><th>Debit</th><th>Credit</th><th>Source</th></tr></thead><tbody id="ledger-table-body"></tbody></table></div><div class="module-foot"><span>Only saved organization journal entries are shown. Totals are grouped by currency.</span><button class="btn btn--ghost" data-ui-action="ledger-export">Export CSV</button></div></article>
+      </div>
+      <div class="view" id="view-invoices" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/invoices.png" alt="" width="64" height="64"><h2>Invoices</h2><p>Create and track invoices with totals calculated from line items. Sending an invoice should require approval.</p></div>
+        <div class="module-kpis"><article class="dash-card"><small>Organization invoices</small><strong id="invoice-count">—</strong><span>Live Supabase records</span></article><article class="dash-card"><small>Paid</small><strong id="invoice-paid-count">—</strong><span>Live Supabase records</span></article><article class="dash-card"><small>Drafts</small><strong id="invoice-draft-count">—</strong><span>Ready for review</span></article></div>
+        <article class="dash-card module-card"><div class="card-heading"><div><h3>Invoice workspace</h3><p>Draft totals are calculated by the server. Sending is SIMULATED and requires approval.</p></div><button class="btn btn--primary" id="invoice-create-button" data-ui-action="invoice-create" hidden>＋ New invoice</button></div><div class="module-toolbar"><input type="search" id="invoice-search" placeholder="Search invoices or customers" aria-label="Search invoices"><select id="invoice-filter" aria-label="Filter invoices"><option value="">All statuses</option><option>Draft</option><option>Awaiting approval</option><option>Sent</option><option>Paid</option><option>Void</option></select></div><div class="module-table-wrap"><table class="module-table" id="invoice-table"><thead><tr><th>Invoice</th><th>Customer</th><th>Issue date</th><th>Due date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody></tbody></table></div><div class="module-foot"><span id="invoice-live-status" role="status" aria-live="polite">Loading live invoices…</span><button class="btn btn--ghost" id="invoice-live-retry" type="button" hidden>Retry</button></div></article>
+      </div>
+      <div class="invoice-modal" id="invoice-create-modal" hidden aria-hidden="true">
+        <button class="invoice-modal-backdrop" type="button" data-invoice-close aria-label="Close new invoice form"></button>
+        <section class="invoice-dialog" role="dialog" aria-modal="true" aria-labelledby="invoice-dialog-title" aria-describedby="invoice-dialog-description">
+          <button class="modal-close" type="button" data-invoice-close aria-label="Close">×</button>
+          <span class="section-kicker">INVOICE DRAFT</span><h2 id="invoice-dialog-title">Create new invoice</h2>
+          <p id="invoice-dialog-description">Add the customer and line item details. This creates a draft for review; it does not send the invoice.</p>
+          <form id="invoice-create-form" novalidate>
+            <input type="hidden" name="invoiceNumber" value="">
+            <div class="invoice-form-grid">
+              <label class="invoice-field invoice-field--wide">Customer or business<input name="customerName" required maxlength="160" autocomplete="organization" placeholder="e.g. Northstar Studio"><small class="invoice-field-error" data-invoice-error="customerName"></small></label>
+              <label class="invoice-field invoice-field--wide">Customer email<input name="customerEmail" type="email" required maxlength="254" autocomplete="email" placeholder="accounts@example.com"><small class="invoice-field-error" data-invoice-error="customerEmail"></small></label>
+              <label class="invoice-field">Currency<select name="currency" required><option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option></select></label>
+              <label class="invoice-field">Issue date<input name="issueDate" type="date" required><small class="invoice-field-error" data-invoice-error="issueDate"></small></label>
+              <label class="invoice-field">Due date<input name="dueDate" type="date" required><small class="invoice-field-error" data-invoice-error="dueDate"></small></label>
+            </div>
+            <h3>Line items</h3><div id="invoice-line-items"></div>
+            <template id="invoice-line-template"><div class="invoice-form-grid invoice-line-row" data-invoice-line><label class="invoice-field invoice-field--wide">Description<input name="description" required maxlength="200" placeholder="Services or products provided"><small class="invoice-field-error" data-invoice-error="description"></small></label><label class="invoice-field">Quantity<input name="quantity" type="number" min="0.001" step="0.001" value="1" required><small class="invoice-field-error" data-invoice-error="quantity"></small></label><label class="invoice-field">Unit price<input name="unitPrice" type="number" min="0" step="0.01" inputmode="decimal" required placeholder="0.00"><small class="invoice-field-error" data-invoice-error="unitPrice"></small></label><label class="invoice-field">Tax rate (%)<input name="taxRate" type="number" min="0" max="100" step="0.01" value="0" required><small class="invoice-field-error" data-invoice-error="taxRate"></small></label><button class="btn btn--ghost" type="button" data-invoice-remove-line>Remove line</button></div></template>
+            <div class="invoice-form-actions"><button class="btn btn--ghost" id="invoice-add-line" type="button">Add line item</button></div>
+            <label class="invoice-field invoice-field--wide">Notes<textarea name="notes" maxlength="2000" rows="3" placeholder="Optional invoice notes"></textarea></label>
+            <div class="invoice-total"><span>Invoice total</span><strong id="invoice-form-total">₹0.00</strong></div>
+            <p class="invoice-form-error" id="invoice-form-error" role="alert" aria-live="polite"></p>
+            <div class="invoice-form-actions"><button class="btn btn--ghost" type="button" data-invoice-close>Cancel</button><button class="btn btn--primary" type="submit">Create draft</button></div>
+          </form>
+        </section>
+      </div>
+      <div class="view" id="view-reports" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/reports.png" alt="" width="64" height="64"><h2>Reports</h2><p>Financial summaries built from organization ledger activity. Amounts are shown separately by currency.</p></div>
+        <article class="dash-card module-card"><div class="card-heading"><div><h3>Performance overview</h3><p id="report-period-label">Loading organization report period…</p></div><div class="module-inline"><select id="report-period" aria-label="Report period"><option value="month">This month</option><option value="quarter">This quarter</option><option value="year">This year</option></select><button class="btn btn--ghost" data-ui-action="reports-export">Export CSV</button></div></div><p id="reports-live-status" class="module-foot" role="status" aria-live="polite">Loading organization reports…</p><button id="reports-retry" class="btn btn--ghost" type="button" hidden>Retry</button><div class="report-summary-grid"><div><small>Gross receipts</small><strong id="report-gross">—</strong></div><div><small>Processing fees</small><strong id="report-fees">—</strong></div><div><small>Refunds</small><strong id="report-refunds">—</strong></div><div><small>Net activity</small><strong id="report-net">—</strong></div></div><div class="report-bars" id="reports-chart" aria-label="Organization monthly revenue by currency"></div><div class="module-foot"><span id="reports-source-note">Amounts load from this organization’s ledger. Currencies are not combined.</span></div></article>
+        <div class="module-kpis module-kpis--two"><article class="dash-card"><h3>Profit &amp; loss</h3><p>Income, fees, refunds and net activity by period.</p><button class="table-action" data-ui-action="report-open" data-report-type="profit-loss">Open report →</button></article><article class="dash-card"><h3>Trial balance</h3><p>Debits and credits grouped by account.</p><button class="table-action" data-ui-action="report-open" data-report-type="trial-balance">Open report →</button></article></div>
+        <article class="dash-card fx-converter"><div><span class="section-kicker">FINANCE UTILITY</span><h3>Currency converter</h3><p>Indicative reference rates. Free providers generally update about once per working day; not tick-by-tick or guaranteed settlement rates.</p></div><div class="fx-controls"><label>Amount<input id="fx-amount" type="number" min="0" step="0.01" value="5000" inputmode="decimal"></label><label>From<select id="fx-from"><option value="INR">INR · ₹</option><option value="USD">USD · $</option></select></label><button class="fx-swap-logo" id="fx-swap" type="button" aria-label="Swap currencies" title="Swap currencies"><svg viewBox="0 0 48 48" focusable="false" aria-hidden="true"><defs><linearGradient id="fxsw-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs><circle class="fxsw-ring" cx="24" cy="24" r="21"/><g class="fxsw-orbit"><path class="fxsw-arc" d="M24 7a17 17 0 0 1 15.3 9.6"/><path class="fxsw-head" d="M40.2 10.8l-.9 5.8-5.7-1"/><path class="fxsw-arc" d="M24 41a17 17 0 0 1-15.3-9.6"/><path class="fxsw-head" d="M7.8 37.2l.9-5.8 5.7 1"/></g><g class="fxsw-coin"><circle cx="24" cy="24" r="9"/><text x="24" y="28.4" text-anchor="middle" class="fxsw-sym fxsw-sym--a">$</text><text x="24" y="28.4" text-anchor="middle" class="fxsw-sym fxsw-sym--b">₹</text></g></svg></button><label>To<select id="fx-to"><option value="USD">USD · $</option><option value="INR">INR · ₹</option></select></label></div><div class="fx-result"><strong id="fx-result-value" aria-live="polite">Loading currency rates…</strong><span id="fx-rate-note"></span><small id="fx-source-note" role="status">Rates are indicative and may be delayed.</small><small>Fallback rates: <a href="https://www.exchangerate-api.com" target="_blank" rel="noreferrer">ExchangeRate-API</a>.</small></div></article>
+      </div>
+      <div class="view" id="view-documents" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/documents.png" alt="" width="64" height="64"><h2>Documents</h2><p>Upload invoices and receipts, review extracted fields, and check for possible duplicates before creating a draft.</p></div>
+        <article class="dash-card module-card upload-card"><div class="upload-icon">↑</div><h3>Upload an invoice or receipt</h3><p>PDF, PNG or JPG · up to 10 MB and 10 pages. OCR results need human review.</p><label class="btn btn--primary" for="document-upload">Choose a file</label><input id="document-upload" type="file" accept="application/pdf,image/png,image/jpeg" hidden><span id="document-upload-name" class="module-status" role="status">No file selected</span></article>
+        <p id="documents-live-status" class="module-status" role="status" aria-live="polite">Loading organization documents…</p><button id="documents-retry" class="btn btn--ghost" type="button" hidden>Retry</button>
+        <div class="module-kpis module-kpis--two"><article class="dash-card"><div class="card-heading"><div><h3>Organization documents</h3><span id="documents-count" class="status info">Loading</span></div><button id="documents-refresh" class="btn btn--ghost" type="button">Refresh</button></div><div id="documents-list" aria-live="polite"></div></article><article class="dash-card"><h3>Field review</h3><div id="document-review-panel"><p>Select a processed document to review extracted fields and confidence.</p></div></article></div>
+      </div>
+      <div class="view" id="view-community-funds" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/fundraising.png" alt="" width="64" height="64"><h2>Campaigns &amp; public record</h2><p>Manage campaign goals and review how community contributions connect to approved spending.</p></div>
+        <div class="module-kpis" data-fund-sample hidden><article class="dash-card"><small>Active campaigns</small><strong>3</strong><span>Across 2 communities</span></article><article class="dash-card"><small>Raised this month</small><strong>₹4,82,000</strong><span>Illustrative contributions</span></article><article class="dash-card"><small>Needs attention</small><strong>1</strong><span>Contribution reconciliation</span></article></div>
+        <div class="campaign-grid" data-fund-sample hidden><article class="dash-card campaign-card"><span class="status success">Active</span><h3>Community Learning Center</h3><p>Furniture and learning materials for the new neighborhood center.</p><div class="campaign-progress"><span style="width:72%"></span></div><div class="campaign-numbers"><b>₹3,60,000 raised</b><span>of ₹5,00,000</span></div><small>42 contributions · updated 21 Oct 2026</small><button class="btn btn--ghost" data-ui-action="campaign-view">View contributions</button></article><article class="dash-card campaign-card"><span class="status info">Active</span><h3>Park Renewal Drive</h3><p>Accessible paths, seating and native planting for the local park.</p><div class="campaign-progress"><span style="width:46%"></span></div><div class="campaign-numbers"><b>₹1,22,000 raised</b><span>of ₹2,65,000</span></div><small>19 contributions · updated 20 Oct 2026</small><button class="btn btn--ghost" data-ui-action="campaign-view">View contributions</button></article><article class="dash-card campaign-create"><span class="upload-icon">＋</span><h3>Start a campaign</h3><p>Set a goal, explain the need and share transparent progress.</p><button class="btn btn--primary" data-ui-action="campaign-create">Create campaign</button></article></div>
+        <section class="community-transparency-section" data-fund-sample hidden aria-labelledby="community-transparency-title">
+        <div class="page-intro"><span class="section-kicker">PUBLIC VIEW · READ ONLY</span><h2 id="community-transparency-title">Transparency &amp; spending</h2><p>Review the public record linking contributions to approved spending and completion evidence.</p></div>
+        <article class="dash-card transparency-hero"><span class="status success">Public transparency · read only</span><h2>Maple Grove Community Fund</h2><p>Contributions and expenses are shared with personal details removed. This demonstration uses illustrative data.</p><div class="report-summary-grid"><div><small>Raised</small><strong>₹4,82,000</strong></div><div><small>Spent</small><strong>₹1,28,400</strong></div><div><small>Available</small><strong>₹3,53,600</strong></div></div></article>
+        <div class="module-kpis module-kpis--two"><article class="dash-card"><h3>Recent contributions</h3><div class="transparency-row"><span>Community supporter</span><b>₹5,000</b><small>21 Oct · Verified</small></div><div class="transparency-row"><span>Anonymous</span><b>₹2,500</b><small>20 Oct · Verified</small></div><div class="transparency-row"><span>Community supporter</span><b>₹1,000</b><small>19 Oct · Verified</small></div></article><article class="dash-card"><h3>Recent spending</h3><div class="transparency-row"><span>Playground safety surface</span><b>₹26,700</b><small>Approved · Paid · Evidence complete</small></div><div class="transparency-row"><span>Community hall water pump</span><b>₹18,400</b><small>Approved · Payment evidence pending</small></div><p class="module-foot">Each expense links to approval, invoice, payment reference and completion evidence.</p></article></div>
+        </section>
+      </div>
+      <div class="view" id="view-settings" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/settings.png" alt="" width="64" height="64"><h2>Settings</h2><p>Manage your account, preferences and data. Changes are saved in this browser and apply immediately.</p></div>
+        <div class="settings-layout">
+          <nav class="settings-nav" aria-label="Settings sections">
+            <p class="settings-nav-label">Account</p>
+            <button type="button" data-set-section="profile"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.9-3.6 3.7-5.4 7.5-5.4s6.6 1.8 7.5 5.4"/></svg><span>Profile</span></button>
+            <button type="button" data-set-section="security"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.3-2.9 7.8-7 9.5-4.1-1.7-7-5.2-7-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg><span>Security</span></button>
+            <p class="settings-nav-label">Preferences</p>
+            <button type="button" data-set-section="appearance"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg><span>Appearance</span></button>
+            <button type="button" data-set-section="notifications"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 17V11a6 6 0 0112 0v6l1.5 2h-15z"/><path d="M10 21a2 2 0 004 0"/></svg><span>Notifications</span></button>
+            <button type="button" data-set-section="ai"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01M9.5 21h5"/></svg><span>AI Assistant</span></button>
+            <p class="settings-nav-label">Workspace</p>
+            <button type="button" data-set-section="workspace"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 2.6 15.2 0 18M12 3c-2.6 2.8-2.6 15.2 0 18"/></svg><span>Workspace</span></button>
+            <button type="button" data-set-section="data"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg><span>Data &amp; privacy</span></button>
+            <p class="settings-nav-label">Support</p>
+            <button type="button" data-set-section="help"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.6"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/></svg><span>Help &amp; support</span></button>
+          </nav>
+          <div class="settings-content">
+          <article class="dash-card set-panel" id="setpanel-profile" aria-labelledby="settitle-profile">
+            <header class="set-panel-head"><h3 id="settitle-profile">Profile</h3><p>How your name and identity appear across NovaPay.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Personal information</h4>
+              <div class="settings-card">
+                <label for="set-name"><span><b>Display name</b><small>Shown in the sidebar and dashboard greeting.</small></span><input type="text" id="set-name" maxlength="40" placeholder="Your name" autocomplete="name"></label>
+                <label for="set-email"><span><b>Email</b><small>Used to sign in. It cannot be changed here.</small></span><input type="text" id="set-email" readonly></label>
+                <label for="set-role"><span><b>Role</b><small>Your role in this workspace.</small></span><input type="text" id="set-role" value="Loading workspace role…" readonly></label>
+              </div>
+              <div class="settings-actions"><button class="btn btn--primary" id="set-save-profile" type="button">Save profile</button></div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-security" aria-labelledby="settitle-security" hidden>
+            <header class="set-panel-head"><h3 id="settitle-security">Security</h3><p>Keep your account and session safe.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Password</h4>
+              <form class="settings-card" id="set-password-form" novalidate autocomplete="on">
+                <input type="text" id="set-pw-username" autocomplete="username" hidden tabindex="-1" aria-hidden="true" readonly>
+                <label for="set-pw-current"><span><b>Current password</b><small>Required to set a new one.</small></span><input type="password" id="set-pw-current" autocomplete="current-password"></label>
+                <label for="set-pw-new"><span><b>New password</b><small>At least 8 characters, with a letter and a number.</small></span><input type="password" id="set-pw-new" autocomplete="new-password"></label>
+                <label for="set-pw-confirm"><span><b>Confirm new password</b><small>Type the new password again.</small></span><input type="password" id="set-pw-confirm" autocomplete="new-password"></label>
+                <p class="set-status" id="set-pw-status" role="status" aria-live="polite"></p>
+                <div class="settings-actions"><button class="btn btn--primary" id="set-pw-submit" type="submit">Update password</button></div>
+              </form>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Session</h4>
+              <div class="settings-card">
+                <label for="set-autologout"><span><b>Auto sign-out</b><small>Sign out automatically after a period of inactivity.</small></span><select id="set-autologout"><option value="0">Never</option><option value="15">After 15 minutes</option><option value="30">After 30 minutes</option><option value="60">After 1 hour</option></select></label>
+                <div class="set-row"><span><b>Sign out</b><small>End this session on this device.</small></span><button class="btn btn--ghost" id="set-logout" type="button">Log out</button></div>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-appearance" aria-labelledby="settitle-appearance" hidden>
+            <header class="set-panel-head"><h3 id="settitle-appearance">Appearance</h3><p>Make NovaPay look and feel the way you like.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Theme</h4>
+              <div class="settings-card">
+                <label for="set-theme"><span><b>Theme</b><small>Light, dark, or follow your device.</small></span><select id="set-theme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">Match device</option></select></label>
+              </div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Layout</h4>
+              <div class="settings-card">
+                <label><span><b>Compact layout</b><small>Tighter spacing in cards and tables to fit more on screen.</small></span><input type="checkbox" id="set-compact"></label>
+                <label for="set-landing"><span><b>Start page</b><small>The page that opens when you launch the dashboard.</small></span><select id="set-landing"><option value="dashboard">Dashboard</option><option value="transactions">Transactions</option><option value="ai-assistant">AI Assistant</option><option value="approvals">Approvals</option><option value="sandbox">PayPal Sandbox</option><option value="ledger">Ledger</option><option value="invoices">Invoices</option><option value="reports">Reports</option><option value="documents">Documents</option><option value="community-funds">Community Funds</option><option value="maintenance">Maintenance</option><option value="settings">Settings</option></select></label>
+              </div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Accessibility</h4>
+              <div class="settings-card">
+                <label><span><b>Reduced motion</b><small>Turn off animations and transitions.</small></span><input type="checkbox" id="reduce-motion-toggle"></label>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-notifications" aria-labelledby="settitle-notifications" hidden>
+            <header class="set-panel-head"><h3 id="settitle-notifications">Notifications</h3><p>Choose what gets your attention.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Alerts</h4>
+              <div class="settings-card">
+                <label><span><b>In-app notifications</b><small>Show the notification bell. Turning this off silences all alerts below.</small></span><input type="checkbox" id="set-notif" checked></label>
+                <label><span><b>Approval alerts</b><small>Show the pending-proposal count in the sidebar and in notifications.</small></span><input type="checkbox" id="set-approval-alerts" checked></label>
+                <label><span><b>AI insight alerts</b><small>Show AI Assistant insight notifications.</small></span><input type="checkbox" id="set-ai-alerts" checked></label>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-ai" aria-labelledby="settitle-ai" hidden>
+            <header class="set-panel-head"><h3 id="settitle-ai">AI Assistant</h3><p>Control how NovaPay AI behaves.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Assistant</h4>
+              <div class="settings-card">
+                <label><span><b>AI suggestions</b><small>Show suggested questions in the AI workspace.</small></span><input type="checkbox" id="set-ai-suggestions" checked></label>
+                <label><span><b>Show thinking steps</b><small>Display progress steps while an answer is prepared.</small></span><input type="checkbox" id="set-ai-thoughts" checked></label>
+                <label><span><b>Animate answers</b><small>Type answers out gradually instead of showing them at once.</small></span><input type="checkbox" id="set-ai-typing" checked></label>
+              </div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Safety</h4>
+              <div class="settings-card">
+                <label><span><b>Ask before any action</b><small>AI proposals always need your approval first. This safeguard is always on.</small></span><input type="checkbox" id="set-ai-confirm" checked disabled></label>
+              </div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Conversation</h4>
+              <div class="settings-card">
+                <div class="set-row"><span><b>Clear conversation</b><small>Remove the messages from the current AI chat.</small></span><button class="btn btn--ghost" id="set-ai-clear" type="button">Clear chat</button></div>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-workspace" aria-labelledby="settitle-workspace" hidden>
+            <header class="set-panel-head"><h3 id="settitle-workspace">Workspace</h3><p>Regional information for this workspace.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Region</h4>
+              <div class="settings-card">
+                <label><span><b>Currency display</b><small>Amounts use each record’s currency. Cross-currency totals are shown separately.</small></span><input type="text" value="Per record" readonly></label>
+                <label><span><b>Time zone</b><small>Detected from your browser.</small></span><input type="text" id="set-tz" readonly></label>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-data" aria-labelledby="settitle-data" hidden>
+            <header class="set-panel-head"><h3 id="settitle-data">Data &amp; privacy</h3><p>Export saved transactions or browser-local profile and preferences, or reset preferences.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Export your data</h4>
+              <div class="settings-card">
+                <div class="set-row"><span><b>Export transactions</b><small>Download all transactions in this workspace as a CSV file.</small></span><button class="btn btn--ghost" id="set-export-tx" type="button">Download CSV</button></div>
+                <div class="set-row"><span><b>Export browser profile and preferences</b><small>This does not include server-side organization records.</small></span><button class="btn btn--ghost" id="set-export-data" type="button">Download JSON</button></div>
+              </div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Preferences</h4>
+              <div class="settings-card">
+                <div class="set-row"><span><b>Reset preferences</b><small>Restore every setting to its default. Your profile and password are not changed.</small></span><button class="btn btn--ghost" id="set-reset" type="button">Reset</button></div>
+              </div>
+            </section>
+            <section class="set-group set-group--danger"><h4 class="set-group-title">Danger zone</h4>
+              <div class="settings-card">
+                <div class="set-row set-row--danger"><span><b>Delete demo profile</b><small>Remove this demo profile and its browser-local data. This does not delete a Supabase account or organization records.</small></span><button class="btn btn--danger" id="set-delete" type="button" hidden>Delete demo profile</button></div>
+              </div>
+            </section>
+          </article>
+          <article class="dash-card set-panel" id="setpanel-help" aria-labelledby="settitle-help" hidden>
+            <header class="set-panel-head"><h3 id="settitle-help">Help &amp; support</h3><p>Find quick answers, jump to a feature, or get in touch with the NovaPay team.</p></header>
+            <section class="set-group"><h4 class="set-group-title">Quick help</h4>
+              <div class="help-cards"><button type="button" class="help-card" data-help-view="dashboard"><span class="help-card-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></span><b>Getting started</b><small>See your balance, cash flow and recent activity.</small></button><button type="button" class="help-card" data-help-view="ai-assistant"><span class="help-card-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="8" width="14" height="10" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01"/></svg></span><b>Ask NovaPay AI</b><small>Ask about transactions and see the evidence.</small></button><button type="button" class="help-card" data-help-view="approvals"><span class="help-card-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></span><b>Review approvals</b><small>Check proposals before anything is confirmed.</small></button></div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Frequently asked questions</h4>
+              <div class="settings-card help-faqs"><details class="help-faq"><summary><span>Is this my live PayPal data?</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><p>Authenticated views use data scoped to your organization. PayPal Sandbox actions use test data only; nothing here moves real money.</p></details><details class="help-faq"><summary><span>What can NovaPay AI see?</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><p>NovaPay AI answers only from the activity shown in this workspace and cites the records behind each answer. It makes suggestions only and never takes an action on its own.</p></details><details class="help-faq"><summary><span>How do approvals work?</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><p>Open Approvals to review each proposal and its evidence. A PayPal Sandbox action needs a second confirmation with the reference and amount before it runs; unsupported actions are simulated only.</p></details><details class="help-faq"><summary><span>Where are my settings stored?</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><p>Preferences are saved in this browser and apply immediately. Use Data &amp; privacy to export your information or reset every preference to its default.</p></details><details class="help-faq"><summary><span>How do I change my password or sign out?</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><p>Go to Security. You can update your password, set an automatic sign-out time, or end the session on this device.</p></details></div>
+            </section>
+            <section class="set-group"><h4 class="set-group-title">Contact support</h4>
+              <form class="settings-card" id="help-form" novalidate>
+                <label for="help-topic"><span><b>Topic</b><small>Pick what your message is about.</small></span><select id="help-topic"><option>Payment issue</option><option>Refund question</option><option>Dispute question</option><option>Payout question</option><option>PayPal Sandbox</option><option>Other</option></select></label>
+                <label for="help-message" class="help-msg"><span><b>Message</b><small>Describe what you need. Please don't include passwords.</small></span><textarea id="help-message" rows="4" maxlength="1500" placeholder="How can we help?"></textarea></label>
+                <p class="set-status" id="help-status" role="status" aria-live="polite"></p>
+                <div class="settings-actions help-actions"><button class="btn btn--ghost" id="help-copy" type="button">Copy support email</button><button class="btn btn--primary" id="help-send" type="submit">Send message</button></div>
+              </form>
+            </section>
+          </article>
+          </div>
+        </div>
+      </div>
+      <div class="view" id="view-maintenance" data-view-panel hidden>
+        <div class="page-intro ai-page-intro"><img class="module-head-logo" src="assets/icons/maintenance.png" alt="" width="64" height="64"><h2>Maintenance</h2><p>Follow each request from quotation to approval, payment evidence and completion.</p></div>
+        <article class="dash-card module-card"><div class="card-heading"><div><h3>Maintenance requests</h3><p>Every expense should link to its approval, invoice, payment and completion evidence.</p></div><button class="btn btn--primary" data-ui-action="maintenance-new">＋ New request</button></div><div class="maintenance-list"><article><span class="request-icon">⌂</span><div class="request-main"><b>Replace community hall water pump</b><small>Maple Grove · Requested 18 Oct 2026</small><div class="workflow-steps"><span class="done">Quotation</span><span class="done">Approved</span><span>Payment</span><span>Completion</span></div></div><div class="request-meta"><b>₹18,400</b><span class="status warn">Payment evidence needed</span></div><button class="table-action" data-ui-action="maintenance-view">View details</button></article><article><span class="request-icon">⌂</span><div class="request-main"><b>Repair playground safety surface</b><small>Maple Grove · Requested 12 Oct 2026</small><div class="workflow-steps"><span class="done">Quotation</span><span class="done">Approved</span><span class="done">Payment</span><span class="done">Completion</span></div></div><div class="request-meta"><b>₹26,700</b><span class="status success">Evidence complete</span></div><button class="table-action" data-ui-action="maintenance-view">View details</button></article></div></article>
+      </div>
+
+</section>
+  </main>
+</div>
+
+<div class="transaction-modal" id="transaction-modal" hidden aria-hidden="true">
+  <div class="transaction-modal-backdrop" data-close-transaction></div>
+  <section class="transaction-dialog" role="dialog" aria-modal="true" aria-labelledby="transaction-detail-title">
+    <button class="modal-close" type="button" data-close-transaction aria-label="Close transaction details">×</button>
+    <span class="section-kicker">TRANSACTION DETAIL</span>
+    <h2 id="transaction-detail-title">Payment</h2>
+    <p id="transaction-detail-subtitle">Illustrative PayPal event</p>
+    <div class="transaction-detail-grid">
+      <div><span>Type</span><strong id="detail-type">Payment</strong></div>
+      <div><span>Date &amp; time</span><strong id="detail-date">Unavailable</strong></div>
+      <div><span>Buyer / counterparty</span><strong id="detail-buyer">Unavailable</strong></div>
+      <div><span>Reference</span><strong id="detail-reference">PAY-1001</strong></div>
+      <div><span>Amount</span><strong id="detail-amount">₹10,000</strong></div>
+      <div><span>Fee</span><strong id="detail-fee">₹300</strong></div>
+      <div><span>Net</span><strong id="detail-net">₹9,700</strong></div>
+      <div><span>Status</span><strong id="detail-status">Completed</strong></div>
+      <div><span>Currency</span><strong id="detail-currency">Unavailable</strong></div>
+      <div><span>Source</span><strong id="detail-source">Illustrative sample data</strong></div>
+      <div><span>Related refund / dispute</span><strong id="detail-related">Unavailable</strong></div>
+      <div><span>Ledger entries</span><strong id="detail-ledger">Unavailable</strong></div>
+    </div>
+    <div class="detail-note" id="detail-note">This is illustrative sample data. No live PayPal transaction is accessed or changed.</div>
+    <div class="tx-ai-controls"><label for="tx-ai-question">Ask AI about this transaction</label><div class="tx-ai-row" id="tx-ai-row"><div class="ai-dictation" id="tx-dictation" role="group" aria-label="Voice dictation"><button type="button" class="ai-dict-btn" id="tx-dict-cancel" aria-label="Cancel dictation" title="Cancel (Esc)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="ai-dict-wave strands-container" id="tx-dict-wave" aria-label="Listening animation"></div><span class="ai-dict-time" id="tx-dict-time" role="timer" aria-label="Recording time">0:00</span><button type="button" class="ai-dict-btn ai-dict-btn--ok" id="tx-dict-confirm" aria-label="Use dictated text" title="Done (Enter)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div><input id="tx-ai-question" placeholder="Ask using the available transaction data"><button class="ai-tool-button" id="tx-ai-mic" type="button" aria-label="Start voice input" title="Start voice input"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></button><button class="btn btn--ghost" id="tx-ai-ask" type="button">Ask AI</button></div><p id="tx-voice-status" role="status" aria-live="polite"></p><p id="tx-ai-answer" aria-live="polite"></p><button class="btn btn--primary" id="tx-send-approval" type="button">Send finding to Approvals</button></div>
+    <button class="btn btn--ghost" type="button" data-close-transaction>Close</button>
+  </section>
+</div>
+<div class="transaction-modal campaign-modal" id="campaign-create-modal" hidden aria-hidden="true">
+  <div class="transaction-modal-backdrop" data-campaign-close></div>
+  <section class="transaction-dialog campaign-dialog" role="dialog" aria-modal="true" aria-labelledby="campaign-create-title">
+    <button class="modal-close" type="button" data-campaign-close aria-label="Close campaign form" style="left:auto!important;right:16px!important;top:14px!important;float:none!important">×</button>
+    <span class="section-kicker">COMMUNITY FUND · NEW CAMPAIGN</span>
+    <h2 id="campaign-create-title">Create a campaign</h2>
+    <p>Share the goal and purpose so your community knows what it is supporting.</p>
+    <form id="campaign-create-form" class="campaign-form" novalidate>
+      <label>Campaign title<input name="title" required maxlength="140" autocomplete="off" placeholder="e.g. Community garden refresh"></label>
+      <label>Purpose<textarea name="purpose" required maxlength="1000" rows="3" placeholder="What will this campaign fund?"></textarea></label>
+      <div class="campaign-form-row">
+        <label>Currency<select name="currency" required><option value="USD">USD · PayPal Sandbox</option></select></label>
+        <label>Target amount (USD)<input name="target" type="number" required min="0.01" step="0.01" inputmode="decimal" placeholder="500.00"></label>
+        <label>Target date <span class="form-optional">Optional</span><input name="deadline" type="date"></label>
+      </div>
+      <label>Organiser<input name="organiser" required maxlength="160" autocomplete="organization" value="Organization"></label>
+      <p class="campaign-form-note">Campaign details will be shown with the public contribution and spending record.</p>
+      <p class="campaign-form-status" id="campaign-form-status" role="status" aria-live="polite"></p>
+      <div class="campaign-form-actions"><button class="btn btn--primary" type="submit">Continue</button><button class="btn btn--ghost" type="button" data-campaign-close>Cancel</button></div>
+    </form>
+  </section>
+</div>
+<div class="transaction-modal maintenance-request-modal" id="maintenance-create-modal" hidden aria-hidden="true">
+  <div class="transaction-modal-backdrop" data-maintenance-close></div>
+  <section class="transaction-dialog maintenance-request-dialog" role="dialog" aria-modal="true" aria-labelledby="maintenance-create-title">
+    <button class="modal-close" type="button" data-maintenance-close aria-label="Close maintenance request form">×</button>
+    <span class="section-kicker">COMMUNITY OPERATIONS · NEW REQUEST</span>
+    <h2 id="maintenance-create-title">New maintenance request</h2>
+    <p>Describe the work needed. Requests should include a clear scope and estimated cost.</p>
+    <form id="maintenance-create-form" class="campaign-form" novalidate>
+      <label>Request title<input name="title" required maxlength="160" autocomplete="off" placeholder="e.g. Repair community hall roof"></label>
+      <label>Description<textarea name="description" required maxlength="2000" rows="3" placeholder="Describe the repair or maintenance work"></textarea></label>
+      <label>Location<input name="location" required maxlength="160" placeholder="Building, floor or area"></label>
+      <label>Category<select name="category" required><option value="">Choose category</option><option>Plumbing</option><option>Electrical</option><option>Safety</option><option>Cleaning</option><option>Other</option></select></label>
+      <label>Priority<select name="priority" required><option value="">Choose priority</option><option value="low">Low</option><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select></label>
+      <label>Estimated budget (USD)<input name="estimate" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="Optional"></label>
+      <label>Currency<select name="currency" required><option value="USD">USD</option></select></label>
+      <label>Linked campaign (optional)<select name="campaignId"><option value="">No campaign</option></select></label>
+      <p class="module-foot" id="maintenance-form-status" role="alert" aria-live="polite"></p>
+      <p class="campaign-form-note">Requests are reviewed before approval, payment, and completion evidence are recorded.</p>
+      <div class="campaign-form-actions"><button class="btn btn--primary" type="submit">Continue</button><button class="btn btn--ghost" type="button" data-maintenance-close>Cancel</button></div>
+    </form>
+  </section>
+</div>
+<div class="transaction-modal report-modal" id="report-detail-modal" hidden aria-hidden="true">
+  <div class="transaction-modal-backdrop" data-report-close></div>
+  <section class="transaction-dialog report-dialog" role="dialog" aria-modal="true" aria-labelledby="report-detail-title">
+    <button class="modal-close" type="button" data-report-close aria-label="Close report">×</button>
+    <span class="section-kicker">FINANCIAL REPORT · ILLUSTRATIVE DATA</span>
+    <h2 id="report-detail-title">Report</h2>
+    <p id="report-detail-description"></p>
+    <div class="report-detail-table-wrap"><table class="report-detail-table"><thead><tr id="report-detail-head"></tr></thead><tbody id="report-detail-rows"></tbody><tfoot><tr id="report-detail-total"></tr></tfoot></table></div>
+    <p class="report-detail-note" id="report-detail-note">Organization report data.</p>
+    <button class="btn btn--ghost" type="button" data-report-close>Close</button>
+  </section>
+</div>
+<div class="approval-modal" id="approval-detail-modal" hidden aria-hidden="true">
+  <div class="approval-modal-backdrop" data-close-approval></div>
+  <section class="approval-dialog transaction-dialog" role="dialog" aria-modal="true" aria-labelledby="approval-detail-title">
+    <button class="modal-close" type="button" data-close-approval aria-label="Close proposal details">×</button><span class="section-kicker">PROPOSAL DETAIL</span><h2 id="approval-detail-title">Proposal</h2><p id="approval-detail-reason"></p><dl id="approval-detail-fields" class="approval-detail-fields transaction-detail-grid"></dl><p id="approval-detail-effect" class="approval-detail-effect detail-note"></p><p id="approval-detail-limits" class="approval-detail-limits"></p><label id="approval-reject-reason-wrap" class="approval-reject-reason" hidden>Rejection reason (optional)<textarea id="approval-reject-reason" rows="2"></textarea></label><p id="approval-dialog-status" role="status" aria-live="polite"></p><div class="agent-actions"><button class="btn btn--primary" id="approval-detail-approve" type="button">Approve</button><button class="btn btn--ghost" id="approval-detail-reject" type="button">Reject</button></div>
+  </section>
+</div>
+<div class="approval-modal" id="invoice-detail-modal" hidden aria-hidden="true">
+  <div class="approval-modal-backdrop" data-close-invoice-detail></div>
+  <section class="approval-dialog transaction-dialog" role="dialog" aria-modal="true" aria-labelledby="invoice-detail-title">
+    <button class="modal-close" type="button" data-close-invoice-detail aria-label="Close invoice details">×</button><span class="section-kicker">INVOICE DETAIL</span><h2 id="invoice-detail-title">Invoice</h2><p id="invoice-detail-subtitle">Live organization invoice</p><p id="invoice-detail-status" role="status" aria-live="polite"></p><dl id="invoice-detail-fields" class="approval-detail-fields transaction-detail-grid"></dl><div class="module-table-wrap"><table class="module-table"><thead><tr><th>Description</th><th>Quantity</th><th>Unit price</th><th>Line total</th></tr></thead><tbody id="invoice-detail-lines"></tbody></table></div><p id="invoice-detail-totals" class="module-foot"></p><h3>Notes</h3><p id="invoice-detail-notes"></p><h3>Status history</h3><ul id="invoice-detail-history"></ul><div class="agent-actions"><button class="btn btn--primary" type="button" data-invoice-detail-download hidden disabled>⇩ Download PDF</button><button class="btn btn--ghost" type="button" data-close-invoice-detail>Close</button></div>
+  </section>
+</div>
+<div class="approval-modal" id="approval-confirm-modal" hidden aria-hidden="true">
+  <div class="approval-modal-backdrop" data-close-confirm-approval></div>
+  <section class="approval-dialog" role="dialog" aria-modal="true" aria-labelledby="approval-confirm-title">
+    <button class="modal-close" type="button" data-close-confirm-approval aria-label="Close approval confirmation">×</button><span class="section-kicker">CONFIRM DECISION</span><h2 id="approval-confirm-title">Confirm approval</h2><p id="approval-confirm-copy"></p><div class="approval-confirm-target" id="approval-confirm-target"></div><p class="approval-confirm-warning">This proposal will not execute until you confirm below. PayPal Sandbox only; no production payment support.</p><p id="approval-confirm-error" role="alert" aria-live="assertive"></p><div class="agent-actions"><button class="btn btn--primary" id="approval-confirm-submit" type="button">Confirm and continue</button><button class="btn btn--ghost" type="button" data-close-confirm-approval>Cancel</button></div>
+  </section>
+</div>
+<div class="action-modal" id="action-modal" hidden aria-hidden="true">
+  <div class="action-modal-backdrop" data-close-action></div>
+  <section class="action-dialog" role="dialog" aria-modal="true" aria-labelledby="action-title">
+    <button class="modal-close" type="button" data-close-action aria-label="Close action confirmation">×</button>
+    <span class="section-kicker">HUMAN APPROVAL</span>
+    <h2 id="action-title">Confirm Action</h2>
+    <p class="action-question">Refund <strong>₹2,000</strong>?</p>
+    <div class="action-summary"><span>Transaction</span><b>PAY-28491</b><small>Possible duplicate transaction · Simulated action</small></div>
+    <div class="action-modal-buttons"><button class="btn btn--primary" id="confirm-refund" type="button">Confirm Refund</button><button class="btn btn--ghost" data-close-action type="button">Cancel</button></div>
+  </section>
+</div>
+<div class="modal-backdrop" id="profile-modal" hidden aria-hidden="true">
+  <div class="modal profile-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+    <button class="modal-close" id="profile-modal-close" type="button" aria-label="Close">×</button>
+    <div class="pm-head"><span class="avatar pm-avatar" id="pm-avatar">S</span><div><h2 id="pm-title">User</h2><p id="pm-role">Role loading…</p><span class="status ok pm-status"><span class="session-dot"></span> Active session</span></div></div>
+    <dl class="pm-list">
+      <div><dt>Full name</dt><dd id="pm-name"></dd></div>
+      <div><dt>Email</dt><dd id="pm-email"></dd></div>
+      <div><dt>Role</dt><dd id="pm-role-value">Role loading…</dd></div>
+      <div><dt>Workspace</dt><dd id="pm-workspace">Loading organization…</dd></div>
+      <div><dt>Account type</dt><dd id="pm-account-type">Loading…</dd></div>
+      <div><dt>Signed in</dt><dd id="pm-signed"></dd></div>
+      <div><dt>Time zone</dt><dd id="pm-tz"></dd></div>
+      <div><dt>Currency</dt><dd>INR (₹)</dd></div>
+      <div><dt>Theme</dt><dd id="pm-theme"></dd></div>
+    </dl>
+    <div class="pm-actions"><button class="btn btn--ghost" id="pm-settings" type="button">Edit in Settings</button><button class="btn btn--primary" id="pm-logout" type="button">Log out</button></div>
+  </div>
+</div>
+<div class="modal-backdrop" id="confirm-modal" hidden aria-hidden="true">
+  <div class="modal confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <h2 id="confirm-title">Are you sure?</h2>
+    <p id="confirm-text"></p>
+    <div class="pm-actions"><button class="btn btn--ghost" id="confirm-cancel" type="button">Cancel</button><button class="btn btn--danger" id="confirm-ok" type="button">Confirm</button></div>
+  </div>
+</div>
+<div class="toast" id="dashboard-toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"></script>
+<script src="src/auth.js"></script>
+<script src="src/workspace-guard.js"></script>
+<script src="src/api-client.js"></script>
+<script src="src/assistant-conversation.js"></script>
+<script src="src/assistant-client.js"></script>
+<script src="src/assistant-speech.js"></script>
+<script src="src/assistant-actions.js"></script>
+<script src="src/transactions-grid-core.js"></script>
+<script src="src/transactions-grid.js"></script>
+<script type="module" src="src/voice-greeting.js"></script>
+<script src="src/voice-indicator.js" defer></script>
+<script src="src/chart-theme.js"></script>
+<script src="src/motion.js"></script>
+<script src="src/text-type.js"></script>
+<script src="src/strands.js"></script>
+<script src="src/ai-thoughts.js?v=3"></script>
+<script src="src/dashboard.js?v=6"></script>
+<script src="src/ai-fullscreen.js"></script>
+<script src="src/approvals-data.js"></script>
+<script src="src/novapay-live.js"></script>
+<script src="src/modules.js"></script>
+<script src="src/financial-data.js"></script>
+<script src="src/financial-live.js"></script>
+<script src="src/dashboard-data.js"></script>
+<script src="src/dashboard-live-data.js"></script>
+<script src="src/reports-data.js"></script>
+<script src="src/reports-live.js"></script>
+<script src="src/currency-minor.js"></script>
+<script src="src/fund-views.js?v=2"></script>
+<script src="src/invoice-detail.js"></script>
+<script src="src/invoices-live.js"></script>
+<script src="src/documents.js"></script>
+<script src="src/notifications-live.js"></script>
+<script src="src/transaction-effects.js"></script>
+<script src="src/transaction-premium.js?v=6"></script>
+<script src="src/tx-icons.js"></script>
+<script src="src/modules-premium.js?v=4"></script>
+<script src="src/modules-reactbits.js"></script>
+<script src="src/capabilities-holo.js?v=2"></script>
+<script src="src/click-spark.js"></script>
+<script src="src/specular-buttons.js"></script>
+<script src="src/line-sidebar.js"></script>
+<script src="src/magic-bento-dashboard.js"></script>
+<script src="src/topbar-fx.js"></script>
+<script src="src/date-picker.js"></script>
+<script src="src/help-support.js"></script>
+<script>
+(function () {
+  var auth = window.NovaPayAuth;
+  function toLogin() {
+    try { sessionStorage.setItem("novapay-auth-bounce", String(Date.now())); } catch (_) {}
+    location.replace("preview.html#login");
+  }
+  if (!auth) { toLogin(); return; }
+  auth.ready.then(function () {
+    if (!auth.isAuthenticated()) toLogin();
+  }).catch(toLogin);
+})();
+</script>
+</body>
+</html>

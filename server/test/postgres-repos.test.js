@@ -1,0 +1,257 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createPostgresRepositories, moneyToMinor, minorToMoney } from '../src/repos/postgres.js';
+
+test('money repository helpers use integer minor units and reject excessive precision', () => {
+  assert.equal(moneyToMinor('10.01'), 1001);
+  assert.equal(moneyToMinor('-0.25'), -25);
+  assert.equal(minorToMoney(1001), '10.01');
+  assert.throws(() => moneyToMinor('1.001'));
+  assert.throws(() => moneyToMinor('999999999999999999.00'));
+});
+
+test('invoice download audit uses the scoped service-only RPC with invoice identity', async () => {
+  const calls=[];
+  const database={async rpc(name,args){calls.push({name,args});}};
+  const repos=createPostgresRepositories(database);
+  await repos.invoices.auditDownload('org-a','actor-a','invoice-a','request-a');
+  assert.deepEqual(calls,[{name:'record_invoice_download_audit',args:{p_org:'org-a',p_actor:'actor-a',p_invoice:'invoice-a',p_request_id:'request-a'}}]);
+});
+
+test('invoice download audit privilege failure stays specific and fails closed', async () => {
+  const database={async rpc(){throw Object.assign(new Error('Financial database operation failed.'),{statusCode:503,code:'DATABASE_UNAVAILABLE',databaseCode:'42501'});}};
+  const repos=createPostgresRepositories(database);
+  await assert.rejects(repos.invoices.auditDownload('org-a','actor-a','invoice-a','request-a'),(error)=>error.statusCode===503&&error.code==='INVOICE_AUDIT_WRITE_FAILED'&&error.databaseCode==='42501'&&error.message==='Invoice download audit insert failed.');
+});
+
+test('transaction focus lookup batches IDs under an explicit organization filter', async () => {
+  const calls=[];
+  const database={async select(table,query){calls.push({table,query});return [{id:'CAP-1',org_id:'org-a'}];}};
+  const repos=createPostgresRepositories(database);
+  const rows=await repos.getTransactionsByIds('org-a',['CAP-1','CAP-2','bad),org_id.eq.org-b']);
+  assert.deepEqual(rows,[{id:'CAP-1',org_id:'org-a'}]);
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].table,'transactions');
+  const decoded=decodeURIComponent(calls[0].query);
+  assert.match(decoded,/org_id=eq\.org-a/);
+  assert.match(decoded,/id=in\.\(CAP-1,CAP-2\)/);
+  assert.doesNotMatch(decoded,/org_id\.eq\.org-b/);
+});
+
+test('invoice detail loads lines and status events only for the selected organization and invoice', async () => {
+  const calls=[];
+  const database={async select(table,query){calls.push({table,query});if(table==='invoices')return [{id:'invoice-a',org_id:'org-a',invoice_number:'INV-A',state:'draft',currency:'INR',subtotal_minor:13440,tax_minor:0,total_minor:13440}];if(table==='invoice_lines')return [{id:'line-a',description:'Consulting',quantity:1,unit_price_minor:13440,line_total_minor:13440}];if(table==='invoice_events')return [{event_type:'draft.created',created_at:'2026-11-01T10:00:00.000Z'}];return [];}};
+  const repos=createPostgresRepositories(database), invoice=await repos.invoices.get('org-a','invoice-a');
+  assert.equal(invoice.lines[0].unitPriceMinor,13440);
+  assert.deepEqual(invoice.events,[{type:'draft.created',occurredAt:'2026-11-01T10:00:00.000Z'}]);
+  assert.equal(calls.length,3);
+  assert.ok(calls.every((call)=>call.query.includes('org_id=eq.org-a')&&call.query.includes('invoice_id=eq.invoice-a')||call.table==='invoices'&&call.query.includes('id=eq.invoice-a')));
+});
+
+test('Postgres funds repository uses T4 service-only queue RPCs and maps maintenance context', async () => {
+  const calls=[];
+  const database={
+    async rpc(name,args){calls.push({name,args});return name==='request_fund_maintenance_payment'?{approvalId:'APR-FUND-PAY-1',status:'pending'}:{status:'simulated'};},
+    async select(table){return table==='approvals'?[{id:'APR-FUND-PAY-1',org_id:'org-a',proposal_type:'maintenance-payment',fund_maintenance_request_id:'request-1',request_payload:{mode:'SIMULATED'},amount_minor:9999,currency:'USD',status:'pending'}]:[];},
+  };
+  const repos=createPostgresRepositories(database);
+  await repos.funds.requestMaintenancePayment({orgId:'org-a',actorId:'actor-a',requestId:'request-1',requestKey:'req-a'});
+  await repos.funds.decideMaintenancePayment({orgId:'org-a',approvalId:'APR-FUND-PAY-1',reviewerId:'reviewer-a',decision:'approve',note:'ok',requestKey:'req-b'});
+  const approval=await repos.approvals.get('APR-FUND-PAY-1','org-a');
+  assert.deepEqual(calls.map(call=>call.name),['request_fund_maintenance_payment','decide_fund_maintenance_payment']);
+  assert.equal(calls[0].args.p_request,'request-1');
+  assert.equal(calls[1].args.p_decision,'approve');
+  assert.equal(approval.proposalType,'maintenance-payment');
+  assert.equal(approval.fundMaintenanceRequestId,'request-1');
+  assert.deepEqual(approval.requestPayload,{mode:'SIMULATED'});
+});
+
+test('Postgres funds repository calls T5 completion evidence and close RPCs', async () => {
+  const calls=[];
+  const database={async rpc(name,args){calls.push({name,args});return {status:'evidence_submitted'};}};
+  const repos=createPostgresRepositories(database);
+  await repos.funds.submitCompletionEvidence({orgId:'org-a',actorId:'submitter-a',requestId:'request-a',kind:'inspection',description:'Work completion checklist.',fileRef:'docs/checklist.pdf',requestKey:'req-submit'});
+  await repos.funds.reviewCompletionEvidence({orgId:'org-a',actorId:'reviewer-a',requestId:'request-a',evidenceId:'evidence-a',decision:'accept',note:'Reviewed metadata.',requestKey:'req-review'});
+  await repos.funds.closeMaintenanceRequest({orgId:'org-a',actorId:'reviewer-a',requestId:'request-a',requestKey:'req-close'});
+  assert.deepEqual(calls.map(call=>call.name),['submit_fund_completion_evidence','review_fund_completion_evidence','close_fund_maintenance_request']);
+  assert.equal(calls[0].args.p_file_ref,'docs/checklist.pdf');
+  assert.equal(calls[1].args.p_decision,'accept');
+  assert.equal(calls[2].args.p_actor,'reviewer-a');
+});
+
+test('maintenance list keeps table reads org-scoped and obtains activity from the scoped service-only RPC', async () => {
+  const calls=[];
+  const database={
+    async select(table,query){calls.push({kind:'select',table,query});if(table==='maintenance_requests')return [{id:'request-a',org_id:'org-a',title:'Repair',scope:'Pump',status:'requested',estimate_minor:12500,requested_by:'owner-a'}];if(table==='fund_contractors')return [{id:'contractor-a',org_id:'org-a',name:'Fixture',payment_destination_ref:'must-not-leak'}];return [];},
+    async rpc(name,args){calls.push({kind:'rpc',name,args});return [{id:'audit-a',entityId:'request-a',actorId:'owner-a',action:'fund.maintenance.requested',at:'2026-11-01T00:00:00Z'}];},
+  };
+  const repos=createPostgresRepositories(database);const rows=await repos.funds.listMaintenance('org-a','owner-a');
+  assert.equal(rows.length,1);assert.equal(rows[0].activity.length,1);assert.equal(rows[0].currency,'USD');
+  assert.equal(rows[0].contractor,null);assert.ok(!JSON.stringify(rows).includes('must-not-leak'));
+  const rpc=calls.find((call)=>call.kind==='rpc');assert.deepEqual(rpc,{kind:'rpc',name:'get_fund_maintenance_activity',args:{p_org:'org-a',p_actor:'owner-a',p_request:null}});
+  assert.ok(calls.filter((call)=>call.kind==='select').every((call)=>new URLSearchParams(call.query).get('org_id')==='eq.org-a'));
+  assert.ok(calls.every((call)=>call.table!=='audit_log'));
+});
+
+test('Postgres funds repository calls tenant-scoped T6 transparency and audit export RPCs', async () => {
+  const calls=[];const database={async rpc(name,args){calls.push({name,args});return name==='get_fund_transparency'?{expenses:[]}:[{action:'fund.test'}];}};
+  const repos=createPostgresRepositories(database);
+  await repos.funds.transparency({orgId:'org-a',actorId:'resident-a',campaignId:'campaign-a'});
+  await repos.funds.auditExport({orgId:'org-a',actorId:'admin-a',from:'2026-10-01',to:'2026-10-31'});
+  assert.deepEqual(calls.map(call=>call.name),['get_fund_transparency','get_fund_audit_export']);
+  assert.deepEqual(calls[0].args,{p_org:'org-a',p_actor:'resident-a',p_campaign_id:'campaign-a'});
+  assert.deepEqual(calls[1].args,{p_org:'org-a',p_actor:'admin-a',p_from:'2026-10-01',p_to:'2026-10-31'});
+});
+
+test('Postgres repositories scope tenant data and transactional calls by organization', async () => {
+  const calls = [];
+  const database = {
+    async select(table, query) { calls.push({ kind: 'select', table, query }); return table === 'paypal_orders' ? [{ id: 'db-order', org_id: 'org-a', request_key: 'key-a', paypal_order_id: 'ORDER-A', amount_minor: 1000, currency: 'USD', status: 'CREATED', state: 'Created', approve_url: 'https://www.paypal.com/approve' }] : []; },
+    async rpc(name, args) { calls.push({ kind: 'rpc', name, args }); return { id: 'APR-1', org_id: args.p_org, status: 'pending', proposal_type: 'refund', capture_id: 'CAP-1', amount_minor: 100, currency: 'USD' }; },
+  };
+  const repos = createPostgresRepositories(database);
+  const order = await repos.orders.byRequestKey('key-a','org-a');
+  assert.equal(order.id,'ORDER-A');
+  assert.match(calls.at(-1).query,/org_id=eq\.org-a/);
+  await repos.approvals.save('APR-1',{proposalType:'refund',captureId:'CAP-1',amount:'1.00',currency:'USD'},'org-a','user-a');
+  assert.deepEqual(calls.at(-1).args,{p_org:'org-a',p_approval_id:'APR-1',p_capture_id:'CAP-1',p_amount_minor:100,p_currency:'USD',p_created_by:'user-a',p_request_payload:{proposalType:'refund',captureId:'CAP-1',amount:'1.00',currency:'USD'}});
+  await repos.approvals.decide('APR-1','org-a','approve','reviewed','user-a','req-1');
+  assert.equal(calls.at(-1).args.p_org,'org-a');
+  await repos.listTransactions('org-a',{limit:25,offset:0,from:'2026-10-01T00:00:00Z',to:'2026-10-31T23:59:59Z'});
+  assert.match(calls.at(-1).query,/org_id=eq\.org-a/);
+  await repos.trialBalance('org-a','USD');
+  assert.deepEqual(calls.at(-1),{kind:'rpc',name:'get_org_trial_balance',args:{p_org:'org-a',p_currency:'USD'}});
+});
+
+test('capture reads disambiguate the order foreign key in PostgREST embeds', async () => {
+  const calls = [];
+  const database = {
+    async select(table, query) { calls.push({ table, query }); return []; },
+  };
+  const repos = createPostgresRepositories(database);
+  await repos.captures.get('CAP-1', 'org-a');
+  await repos.captures.all('org-a');
+  assert.equal(calls.length, 2);
+  for (const call of calls) {
+    const params = new URLSearchParams(call.query);
+    assert.equal(call.table, 'paypal_captures');
+    assert.equal(params.get('select'), '*,paypal_orders!paypal_captures_org_id_order_id_fkey(paypal_order_id)');
+  }
+});
+
+test('fund-linked synchronous and webhook captures send Donations account lines', async () => {
+  const calls = [];
+  const database = {
+    async select(table, query) {
+      calls.push({ kind: 'select', table, query });
+      return table === 'paypal_orders' ? [{ id: 'db-order', org_id: 'org-a', paypal_order_id: 'ORDER-FUND', fund_contribution_id: 'contribution-1' }] : [];
+    },
+    async rpc(name, args) {
+      calls.push({ kind: 'rpc', name, args });
+      return name === 'record_paypal_capture'
+        ? { capture: { paypal_capture_id: 'CAP-FUND', amount_minor: 1000, currency: 'USD', status: 'COMPLETED', org_id: 'org-a' } }
+        : { orgId: 'org-a', result: { capture: { paypal_capture_id: 'CAP-FUND', amount_minor: 1000, currency: 'USD', status: 'COMPLETED', org_id: 'org-a' } } };
+    },
+  };
+  const repos = createPostgresRepositories(database);
+  const capture = { id: 'CAP-FUND', orderId: 'ORDER-FUND', value: '10.00', fee: '0.59', net: '9.41', currency: 'USD', status: 'COMPLETED' };
+  await repos.captures.add(capture, 'org-a');
+  await repos.captures.addFromWebhook(capture);
+  const postings = calls.filter((call) => call.kind === 'rpc');
+  assert.deepEqual(postings.map((call) => call.name), ['record_paypal_capture', 'record_fund_paypal_capture_event']);
+  for (const { args } of postings) {
+    assert.equal(args.p_lines.find((line) => line.account_code === '4100')?.credit_minor, 1000);
+    assert.equal(args.p_lines.some((line) => line.account_code === '4000'), false);
+  }
+});
+
+test('approval repository exposes its public approvalId field for persistence checks', async () => {
+  const database = {
+    async select(table) { return table === 'approvals' ? [{ id:'APR-RESTORED', org_id:'org-a', proposal_type:'refund', capture_id:'CAP-1', amount_minor:100, currency:'USD', status:'pending' }] : []; },
+  };
+  const repos = createPostgresRepositories(database);
+  const [approval] = await repos.approvals.list('org-a');
+  assert.equal(approval.approvalId, 'APR-RESTORED');
+});
+
+test('AI proposal persistence uses the scoped pending-approval RPC with minor-unit amounts', async () => {
+  const calls = [];
+  const database = { async rpc(name, args) { calls.push({ name, args }); return { id: 'AI-APR-1', org_id: args.p_org, proposal_type: args.p_proposal_type, capture_id: args.p_capture_id, amount_minor: args.p_amount_minor, currency: args.p_currency, status: 'pending', created_by: args.p_created_by, request_payload: args.p_request_payload }; } };
+  const repos = createPostgresRepositories(database);
+  const approval = await repos.approvals.createAIProposal({ orgId: 'org-a', actorId: 'user-a', proposalType: 'refund', captureId: 'CAP-1', amount: '7.00', currency: 'USD', requestPayload: { source: 'ai', evidenceIds: ['TRX-1'] } });
+  assert.equal(calls[0].name, 'create_ai_proposal');
+  assert.deepEqual(calls[0].args, { p_org: 'org-a', p_created_by: 'user-a', p_proposal_type: 'refund', p_capture_id: 'CAP-1', p_invoice_id: null, p_amount_minor: 700, p_currency: 'USD', p_request_payload: { source: 'ai', evidenceIds: ['TRX-1'] } });
+  assert.equal(approval.approvalId, 'AI-APR-1');
+  assert.equal(approval.amount, '7.00');
+  assert.equal(approval.status, 'pending');
+});
+
+test('capture and refund persistence send the pure ledger mapping into atomic database RPCs', async () => {
+  const calls = [];
+  const database = {
+    async select() { return [{ fund_contribution_id: null }]; },
+    async rpc(name, args) { calls.push({ name, args }); return { capture: { paypal_capture_id: 'CAP-1', amount_minor: 1000, currency: 'USD', status: 'COMPLETED' }, approval: { id: 'APR-1', amount_minor: 1000, currency: 'USD', status: 'completed' } }; },
+  };
+  const repos = createPostgresRepositories(database);
+  await repos.captures.add({ id: 'CAP-1', orderId: 'ORDER-1', value: '10.00', fee: '0.50', net: '9.50', currency: 'USD', status: 'COMPLETED' }, 'org-a');
+  assert.equal(calls[0].name, 'record_paypal_capture');
+  assert.deepEqual(calls[0].args.p_lines, [
+    { account_code: '1000', debit_minor: 950, credit_minor: 0, currency: 'USD' },
+    { account_code: '5000', debit_minor: 50, credit_minor: 0, currency: 'USD' },
+    { account_code: '4000', debit_minor: 0, credit_minor: 1000, currency: 'USD' },
+  ]);
+  await repos.approvals.finishRefund('APR-1','org-a',{ id:'REF-1',status:'COMPLETED',amount:{value:'10.00',currency_code:'USD'},seller_payable_breakdown:{gross_amount:{value:'10.00'},paypal_fee:{value:'-0.25'},net_amount:{value:'10.25'}} });
+  assert.equal(calls[1].name, 'finish_refund');
+  assert.deepEqual(calls[1].args.p_lines, [
+    { account_code: '4050', debit_minor: 1000, credit_minor: 0, currency: 'USD' },
+    { account_code: '1000', debit_minor: 0, credit_minor: 1025, currency: 'USD' },
+    { account_code: '5000', debit_minor: 25, credit_minor: 0, currency: 'USD' },
+  ]);
+});
+
+test('AI usage reservations and cache persistence stay scoped to the verified organization', async () => {
+  const calls = [];
+  const database = {
+    async rpc(name, args) { calls.push({ kind: 'rpc', name, args }); return name === 'reserve_ai_usage' ? { allowed: true, usageId: 'usage-1' } : 'version-1'; },
+    async select(table, query) { calls.push({ kind: 'select', table, query }); return [{ answer: { reply: 'safe' }, data_version: 'version-1', expires_at: '2026-10-25T00:00:00Z' }]; },
+    async upsert(table, payload, conflict) { calls.push({ kind: 'upsert', table, payload, conflict }); return [payload]; },
+  };
+  const repos = createPostgresRepositories(database);
+  const reservation = await repos.ai.usage.reserve({ orgId: 'org-a', userId: 'user-a', route: 'retrieval', model: 'gemini-3.5-flash-lite', inputTokens: 50, userLimit: 5, orgLimit: 20 });
+  assert.deepEqual(reservation, { allowed: true, usageId: 'usage-1', reason: null });
+  assert.deepEqual(calls[0], { kind: 'rpc', name: 'reserve_ai_usage', args: { p_org: 'org-a', p_user: 'user-a', p_route: 'retrieval', p_model: 'gemini-3.5-flash-lite', p_input_tokens: 50, p_user_limit: 5, p_org_limit: 20 } });
+  await repos.ai.usage.complete('usage-1', { inputTokens: 45, outputTokens: 10, latencyMs: 250, model: 'gemini-3.5-flash-lite', status: 'completed' });
+  assert.equal(calls[1].name, 'complete_ai_usage');
+  assert.equal(calls[1].args.p_usage_id, 'usage-1');
+  assert.equal(calls[1].args.p_input_tokens, 45);
+  const cached = await repos.ai.cache.get('org-a', 'hash-1');
+  assert.equal(cached.answer.reply, 'safe');
+  assert.match(calls[2].query, /org_id=eq\.org-a/);
+  assert.match(calls[2].query, /cache_key=eq\.hash-1/);
+  await repos.ai.cache.put({ orgId: 'org-a', cacheKey: 'hash-1', dataVersion: 'version-1', answer: { reply: 'safe' }, expiresAt: '2026-10-25T00:00:00Z' });
+  assert.equal(calls[3].payload.org_id, 'org-a');
+  assert.equal(calls[3].conflict, 'org_id,cache_key');
+});
+
+test('anomaly records, notification actions, webhook inputs and scheduled org scans are scoped', async () => {
+  const calls = [];
+  const database = {
+    async rpc(name, args) { calls.push({ kind: 'rpc', name, args }); if (name === 'record_anomaly') return { inserted: true, anomaly: { id: 'ANM-1', org_id: args.p_org } }; if (name === 'set_notification_status') return { id: args.p_notification_id, org_id: args.p_org, status: args.p_status }; return ['org-a']; },
+    async select(table, query) { calls.push({ kind: 'select', table, query }); return table === 'notifications' ? [{ id: 'NTF-1', org_id: 'org-a', status: 'unread' }] : [{ event_id: 'EV-1', processing_status: 'retry' }]; },
+  };
+  const repos = createPostgresRepositories(database);
+  const record = await repos.anomalies.record('org-a', { rule: 'stale_webhook', evidenceIds: ['EV-1'], dedupeKey: 'dedupe-1', details: {} });
+  assert.equal(record.inserted, true);
+  assert.equal(calls[0].args.p_org, 'org-a');
+  const events = await repos.events.anomalyCandidates('org-a');
+  assert.equal(events[0].event_id, 'EV-1');
+  assert.match(calls[1].query, /org_id=eq\.org-a/);
+  const notifications = await repos.notifications.list('org-a', { status: 'unread', limit: 10, offset: 0 });
+  assert.equal(notifications[0].org_id, 'org-a');
+  assert.match(calls[2].query, /org_id=eq\.org-a/);
+  const updated = await repos.notifications.setStatus('org-a', 'NTF-1', 'dismissed');
+  assert.equal(updated.status, 'dismissed');
+  assert.deepEqual(await repos.ai.listOrgIds(), ['org-a']);
+  assert.equal(calls[3].args.p_org, 'org-a');
+  assert.equal(calls[4].name, 'list_anomaly_org_ids');
+});
