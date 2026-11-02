@@ -60,7 +60,7 @@ function registerCurrencyProxyRoutes(router, proxy, prefix) {
 
 export function fxPublicRoutes({ currencyConverterUrl = 'https://currency-4mff.onrender.com', fetchImpl = fetch } = {}) {
   const router = Router();
-  router.use(rateLimit({ windowMs: 60 * 60 * 1000, limit: 120, standardHeaders: 'draft-8', legacyHeaders: false }));
+  router.use('/fx/public', rateLimit({ windowMs: 60 * 60 * 1000, limit: 120, standardHeaders: 'draft-8', legacyHeaders: false }));
   registerCurrencyProxyRoutes(router, createConverterProxy({ currencyConverterUrl, fetchImpl }), '/fx/public');
   return router;
 }
